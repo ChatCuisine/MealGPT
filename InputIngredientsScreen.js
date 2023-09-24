@@ -53,7 +53,7 @@ const InputIngredientsScreen = ({ navigation }) => {
             <Text style={{ color: 'white', fontSize: 16, marginTop: 16 }}>
                 Preferred Meal Prep Time: ({mealPrepTime} minutes)
             </Text>
-            <Slider
+            {/*<Slider
                 minimumValue={15}
                 maximumValue={60}
                 step={5}
@@ -62,7 +62,7 @@ const InputIngredientsScreen = ({ navigation }) => {
                 minimumTrackTintColor="#7bd9f1" // Customize the color of the slider track
                 maximumTrackTintColor="white" // Customize the color of the slider track beyond the thumb
                 thumbTintColor="#7bd9f1" // Customize the color of the thumb (slider handle)
-            />
+            />*/}
 
             {/* Dietary Preferences */}
             <Text style={{ color: 'white', fontSize: 16, marginTop: 16 }}>

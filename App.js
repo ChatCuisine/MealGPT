@@ -15,24 +15,32 @@ function App() {
     We could install expo-router if we want to try that instead - some people say it is easier?
     https://www.reddit.com/r/reactnative/comments/14apzyj/exporouter_vs_react_navigation/*/
   return (
-  
+
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-        <Stack.Screen 
-          name="MyRecipes" 
-          component={MyRecipesScreen} 
+        <Stack.Screen
+          name="MyRecipes"
+          component={MyRecipesScreen}
           options={{
             headerStyle: {
               backgroundColor: '#121212', // Set the background color of the header
             },
             headerTintColor: 'white', // Set the color of the header text and buttons
             headerShadowVisible: false, // Set this to false to remove the header shadow
-          }}/>
-        <Stack.Screen name="InputIngredients" component={InputIngredientsScreen} />
+          }} />
+        <Stack.Screen
+          name="InputIngredients"
+          component={InputIngredientsScreen}
+          options={{
+            headerStyle: {
+              backgroundColor: '#121212', // Set the background color of the header
+            },
+            headerTintColor: 'white', // Set the color of the header text and buttons
+            headerShadowVisible: false, // Set this to false to remove the header shadow
+          }} />
         {/* Adding other idea for now...
-        
-        <Stack.Screen name="GPTRecipeIdeas" component={GPTRecipeIdeasScreen} />   */}     
+        <Stack.Screen name="GPTRecipeIdeas" component={GPTRecipeIdeasScreen} />   */}
       </Stack.Navigator>
     </NavigationContainer>
   );
