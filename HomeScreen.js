@@ -1,11 +1,10 @@
-// HomeScreen.js
-
 import React, { useRef } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Button, Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import BuyCarrotsModal from "./BuyCarrotsModal";
+import { useFonts } from "expo-font";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -15,12 +14,19 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const [isBuyCarrotsModalVisible, setIsBuyCarrotsModalVisible] =
     React.useState(false);
-
   const bottomSheetModalRef = useRef(null);
   const snapPoints = ["85%"];
 
   function handlePresentModal() {
     bottomSheetModalRef.current?.present();
+  }
+  
+  const [fontsLoaded] = useFonts({
+    BalooRegular: require("./fonts/Baloo-Regular.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return null;
   }
 
   return (
@@ -28,14 +34,14 @@ const HomeScreen = () => {
       <View style={{ flex: 1 }}>
         {/* Gradient Background */}
         <LinearGradient
-          colors={["#82909a", "#a05d44"]} // See how these work...might need to change.
+          colors={["A2E1ED", "#E59758"]} // See how these work...might need to change.
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
           {/* Image */}
           <Image
             source={require("./assets/chatcuisine_home.png")}
             style={{
-              width: "70%",
+              width: "80%",
               height: "50%",
               resizeMode: "stretch",
               borderRadius: 25,
@@ -48,28 +54,39 @@ const HomeScreen = () => {
               fontSize: 24,
               marginTop: 20,
               fontWeight: "bold",
-              color: "#faf0de",
+              color: 'white', 
+              fontFamily: 'BalooRegular',
             }}
           >
             Chat Cuisine
           </Text>
           <Text
             style={{
-              fontSize: 12,
+              fontSize: 14,
               marginTop: 10,
               textAlign: "center",
               width: "68%",
-              color: "#faf0de",
+              color: 'white', 
+              fontFamily: 'BalooRegular',
             }}
           >
             Get some fresh and unique meal ideas based on ingredients you have.
             Spice up your meal life!
           </Text>
 
+          {/* Let's Cook Button */}
           <Button
             title="Let's cook 🍴"
             titleStyle={{
-              fontWeight: "bold",
+              color: 'white',
+              fontFamily: 'BalooRegular',
+              fontSize: 18, 
+            }}
+            buttonStyle={{
+              backgroundColor: '#7bd9f1',
+              paddingVertical: 15,
+              paddingHorizontal: 30,
+              borderRadius: 20,
             }}
             containerStyle={{
               borderRadius: 30,
@@ -77,6 +94,9 @@ const HomeScreen = () => {
               width: "50%",
               marginTop: 20,
               color: "#faf0de",
+              marginTop: 10,
+              borderRadius: 20,
+              overflow: 'hidden',
             }}
             onPress={() => {
               navigation.navigate("Define Your Recipe"); // Navigate to the "InputIngredients" screen
@@ -99,8 +119,8 @@ const HomeScreen = () => {
             <Icon
               name="chevron-right"
               type="font-awesome"
-              size={10}
-              color="#faf0de"
+              size={10},
+              color: 'white', 
             />
           </TouchableOpacity>
 
@@ -119,7 +139,8 @@ const HomeScreen = () => {
               style={{
                 fontSize: 18,
                 fontWeight: "bold",
-                color: "white",
+                color: 'white', 
+                fontFamily: 'BalooRegular'
               }}
             >
               10 🥕
