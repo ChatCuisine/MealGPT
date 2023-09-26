@@ -1,31 +1,19 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Switch,
-  Dimensions,
-  StyleSheet,
-  Button,
-} from "react-native";
+import { TextInput, Switch, Dimensions } from "react-native";
 import Slider from "@react-native-community/slider";
 import styled from "styled-components";
 
-/* This is the screen for gathering data (ingredients, etc.) that will be input for the chatGPT prompt */
 const InputIngredientsScreen = ({ navigation, route }) => {
   const [ingredients, setIngredients] = useState("");
   const [mealPrepTime, setMealPrepTime] = useState(15);
   const [dietaryPreferences, setDietaryPreferences] = useState({});
   const [includeExtraIngredients, setIncludeExtraIngredients] = useState(false);
   const [carrotCount, setCarrotCount] = useState(route.params.carrotCount);
-  const screenWidth = Dimensions.get("window").width;
 
   const updateCarrots = (newAmount) => {
     setCarrotCount(newAmount);
   };
   useEffect(() => {
-    // If you want to update carrotCount when it changes in the parent screen
     setCarrotCount(route.params.carrotCount);
   }, [route.params.carrotCount]);
 
@@ -39,140 +27,163 @@ const InputIngredientsScreen = ({ navigation, route }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#121212", padding: 16 }}>
-      {/* Ingredient Input */}
-      <Text style={{ color: "white", fontSize: 16 }}>
-        What current ingredients do you have?
-        <Text
-          style={{ color: "#7bd9f1", fontSize: 12, marginLeft: 5 }}
-          onPress={() => {
-            // Implement modal or info display logic here
-            // I am thinking we have something like:
-            /* "If you do not have a solid base ingredient, 
-                            the suggested recipes will likely contain ingredients 
-                            that you will need to go get! 
-                            Ex. chicken, lettuce, salmon, etc. 
-                            We assume you have oil, salt, pepper, and butter."*/
-          }}
-        >
-          (Info)
-        </Text>
-      </Text>
-      <TextInput
-        style={{
-          backgroundColor: "white",
-          padding: 10,
-          borderRadius: 5,
-          marginTop: 8,
-          color: "black",
-        }}
+    <RecipeView>
+      <RecipeText>What type of meal?</RecipeText>
+      <MealButtonsView>
+        <CustomButton onPress={() => {}}>
+          <ButtonText>Breakfast</ButtonText>
+        </CustomButton>
+        <CustomButton onPress={() => {}}>
+          <ButtonText>Lunch</ButtonText>
+        </CustomButton>
+        <CustomButton onPress={() => {}}>
+          <ButtonText>Dinner</ButtonText>
+        </CustomButton>
+        <CustomButton onPress={() => {}}>
+          <ButtonText>Dessert</ButtonText>
+        </CustomButton>
+      </MealButtonsView>
+      <RecipeText>What current ingredients do you have?</RecipeText>
+      <CustomTextInput
         placeholder="Enter ingredients here"
         multiline
         numberOfLines={4}
         value={{ key: "ingredients" }}
         onChangeText={(text) => setIngredients(text)}
       />
-      <Text style={{ color: "white", fontSize: 16 }}>
+      <RecipeText>
         What condiments, seasonings, and sauces you have on hand?
-      </Text>
-
-      <Text style={{ color: "white", fontSize: 16 }}>What type of meal?</Text>
-      <View style={styles.container}>
-        <Button
-          title="Breakfast"
-          onPress={() => {}}
-          buttonStyle={{
-            backgroundColor: "#7bd9f1",
-            paddingVertical: 15,
-            paddingHorizontal: 30,
-            borderRadius: 20,
-          }}
-          containerStyle={{
-            borderRadius: 30,
-            overflow: "hidden",
-            width: "50%",
-            marginTop: 20,
-            color: "#faf0de",
-            marginTop: 10,
-            borderRadius: 20,
-            overflow: "hidden",
-          }}
-        />
-      </View>
-
-      {/* Meal Prep Time Slider */}
-      <Text style={{ color: "white", fontSize: 16, marginTop: 16 }}>
-        Preferred Meal Prep Time: {mealPrepTime} minutes
-      </Text>
+      </RecipeText>
+      <RecipeText>Preferred Meal Prep Time: {mealPrepTime} minutes</RecipeText>
       <Slider
         style={{ width: "100%", height: 40 }}
         minimumValue={15}
         maximumValue={60}
         step={5}
-        minimumTrackTintColor="#FFFFFF"
-        maximumTrackTintColor="#000000"
+        minimumTrackTintColor="#7bd9f1"
+        maximumTrackTintColor="#262626"
         value={mealPrepTime}
         onValueChange={onSliderValueChange}
       />
-      {/* Dietary Preferences */}
-      <Text style={{ color: "white", fontSize: 16, marginTop: 16 }}>
-        Dietary Preferences
-      </Text>
-      {/* TODO - do we want something other than textarea? */}
-      <TextInput
-        style={{
-          backgroundColor: "white",
-          padding: 10,
-          borderRadius: 5,
-          marginTop: 8,
-          color: "black",
-        }}
+      <RecipeText>Dietary Preferences</RecipeText>
+      <CustomTextInput
         placeholder="Any other dietary preferences?"
         multiline
         numberOfLines={4}
         value={{ key: "dietaryPreferences" }}
         onChangeText={(text) => setDietaryPreferences(text)}
       />
-      {/* Include Extra Ingredients */}
-      <View
+      <RecipeText>Level of difficulty</RecipeText>
+      <MealButtonsView>
+        <CustomButton onPress={() => {}}>
+          <ButtonText>Easy</ButtonText>
+        </CustomButton>
+        <CustomButton onPress={() => {}}>
+          <ButtonText>Medium</ButtonText>
+        </CustomButton>
+        <CustomButton onPress={() => {}}>
+          <ButtonText>Hard</ButtonText>
+        </CustomButton>
+      </MealButtonsView>
+      <ConsentView
         style={{ flexDirection: "row", alignItems: "center", marginTop: 16 }}
       >
         <Switch
           value={includeExtraIngredients}
           onValueChange={(value) => setIncludeExtraIngredients(value)}
         />
-        <Text style={{ color: "white", marginLeft: 8 }}>
+        <ConsentText>
           Deliberately include recipes that incorporate one or more ingredients
           I have not listed
-        </Text>
-      </View>
-      <Text style={{ color: "white", fontSize: 16 }}>Level of difficulty</Text>
-      {/* Generate Recipes Button */}
-      <TouchableOpacity
-        style={{
-          backgroundColor: "#7bd9f1",
-          borderRadius: 5,
-          padding: 12,
-          marginTop: 16,
-          alignItems: "center",
-        }}
+        </ConsentText>
+      </ConsentView>
+      <SubmitTouchable
         onPress={() => {
           updateCarrots(carrotCount - 1); // Update carrotCount
           route.params.updateCarrots(carrotCount - 1); // Call the update function in Home Screen
         }}
       >
-        <Text style={{ color: "white", fontSize: 18 }}>Generate Recipes</Text>
-      </TouchableOpacity>
-    </View>
+        <SubmitText>Generate Recipes</SubmitText>
+      </SubmitTouchable>
+    </RecipeView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
-});
-
 export default InputIngredientsScreen;
+
+const RecipeView = styled.View`
+  flex: 1;
+  background-color: #121212;
+  padding: 16px;
+`;
+
+const MealButtonsView = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+`;
+
+const CustomButton = styled.TouchableOpacity`
+  flex: 1;
+  background-color: #7bd9f1;
+  margin-left: 5px; /* Adjust the spacing between buttons */
+  margin-right: 5px; /* Adjust the spacing between buttons */
+  border-radius: 20px;
+  overflow: hidden;
+`;
+
+const ButtonText = styled.Text`
+  color: white;
+  font-family: BalooRegular;
+  font-size: 16px;
+  text-align: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+`;
+
+const RecipeText = styled.Text`
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  padding-top: 15px;
+  padding-top: 10px;
+`;
+
+const InfoText = styled.Text`
+  color: #7bd9f1;
+  font-size: 12;
+  margin-left: 5;
+`;
+
+const SubmitText = styled.Text`
+  color: white;
+  font-size: 18;
+`;
+
+const SubmitTouchable = styled.TouchableOpacity`
+  background-color: #7bd9f1;
+  border-radius: 5px;
+  padding: 12px;
+  margin-top: 16;
+  align-items: center;
+`;
+
+const ConsentText = styled.Text`
+  color: white;
+  font-size: 12px;
+  margin-left: 8;
+`;
+
+const ConsentView = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-top: 16px;
+`;
+
+const CustomTextInput = styled.TextInput`
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 8px;
+  color: black;
+`;
