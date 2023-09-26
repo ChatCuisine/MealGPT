@@ -5,36 +5,36 @@ import { Button } from "react-native-elements";
 import styled from "styled-components";
 
 const BuyCarrotsModal = ({ carrotQuantity }) => {
-  return (
-    <CarrotView>
-      <ModalScroll>
-        <CustomLinearGradient colors={["#A2E1ED", "#E59758"]}>
-          <ModalImage source={require("./assets/chatcuisine_carrots.png")} />
-          <ModalTitle>Buy More Carrots</ModalTitle>
-          <ModalDescription>
-            To write exquiste recipes for yourself, our chef need to be given
-            more carrots
-          </ModalDescription>
-          <ModalEquation>1 carrot = 1 recipe</ModalEquation>
-          <ModalCarrotCount>
-            You currently have {carrotQuantity} carrot(s)
-          </ModalCarrotCount>
-          <PurchaseFirstButton>
-            <FirstButtonText>Purchase 7 carrots for $1.99</FirstButtonText>
-          </PurchaseFirstButton>
-          <PurchaseSecondButton>
-            <SecondButtonText>Purchase 30 carrots for $4.99</SecondButtonText>
-          </PurchaseSecondButton>
-          <ModalDisclaimer>
-            This app generates stories using AI. You can purchase coins to
-            generate new stories. We do not gurantee the quality of the AI
-            generated stories, and are not liable for any damage or losses from
-            using the app
-          </ModalDisclaimer>
-        </CustomLinearGradient>
-      </ModalScroll>
-    </CarrotView>
-  );
+    return (
+        <CarrotView>
+            <ModalScroll>
+                <CustomLinearGradient colors={["#224761", "#C0BBAC", "#224761"]}>
+                    <ModalImage source={require("./assets/chatcuisine_carrots.png")} />
+                    <ModalTitle>Buy More Carrots</ModalTitle>
+                    <ModalDescription>
+                        To write exquiste recipes for yourself, our chef need to be given
+                        more carrots
+                    </ModalDescription>
+                    <ModalEquation>1 carrot = 1 recipe</ModalEquation>
+                    <ModalCarrotCount>
+                        You currently have {carrotQuantity} carrot(s)
+                    </ModalCarrotCount>
+                    <PurchaseFirstButton>
+                        <FirstButtonText>Purchase 7 carrots for $1.99</FirstButtonText>
+                    </PurchaseFirstButton>
+                    <PurchaseSecondButton>
+                        <SecondButtonText>Purchase 30 carrots for $4.99</SecondButtonText>
+                    </PurchaseSecondButton>
+                    <ModalDisclaimer>
+                        This app generates stories using AI. You can purchase coins to
+                        generate new stories. We do not gurantee the quality of the AI
+                        generated stories, and are not liable for any damage or losses from
+                        using the app
+                    </ModalDisclaimer>
+                </CustomLinearGradient>
+            </ModalScroll>
+        </CarrotView>
+    );
 };
 
 export default BuyCarrotsModal;
@@ -54,7 +54,7 @@ const ModalScroll = styled.ScrollView`
   flex: 1;
   flex-grow: 1;
   padding-bottom: 30;
-  background-color: #a2e1ed;
+  background-color: #224761;
 `;
 
 const ModalImage = styled.Image`

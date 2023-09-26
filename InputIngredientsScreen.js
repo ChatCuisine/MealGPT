@@ -4,109 +4,112 @@ import Slider from "@react-native-community/slider";
 import styled from "styled-components";
 
 const InputIngredientsScreen = ({ navigation, route }) => {
-  const [ingredients, setIngredients] = useState("");
-  const [mealPrepTime, setMealPrepTime] = useState(15);
-  const [dietaryPreferences, setDietaryPreferences] = useState({});
-  const [includeExtraIngredients, setIncludeExtraIngredients] = useState(false);
-  const [carrotCount, setCarrotCount] = useState(route.params.carrotCount);
+    const [ingredients, setIngredients] = useState("");
+    const [mealPrepTime, setMealPrepTime] = useState(15);
+    const [dietaryPreferences, setDietaryPreferences] = useState({});
+    const [includeExtraIngredients, setIncludeExtraIngredients] = useState(false);
+    const [carrotCount, setCarrotCount] = useState(route.params.carrotCount);
 
-  const updateCarrots = (newAmount) => {
-    setCarrotCount(newAmount);
-  };
-  useEffect(() => {
-    setCarrotCount(route.params.carrotCount);
-  }, [route.params.carrotCount]);
+    const updateCarrots = (newAmount) => {
+        setCarrotCount(newAmount);
+    };
+    useEffect(() => {
+        setCarrotCount(route.params.carrotCount);
+    }, [route.params.carrotCount]);
 
-  const onSliderValueChange = (value) => {
-    setMealPrepTime(value);
-  };
+    const onSliderValueChange = (value) => {
+        setMealPrepTime(value);
+    };
 
-  const handleGenerateRecipes = () => {
-    // Implement logic to generate recipes based on user input here
-    // I think we would want to navigate to a loading screen while we wait to get a response from ChatGPT
-  };
+    const handleGenerateRecipes = () => {
+        // Implement logic to generate recipes based on user input here
+        // I think we would want to navigate to a loading screen while we wait to get a response from ChatGPT
+        updateCarrots(carrotCount - 1); // Update carrotCount
+        route.params.updateCarrots(carrotCount - 1); // Call the update function in Home Screen
+        navigation.removeListener;
+        navigation.navigate("Loading"); // Navigate to the "Loading" screen
+    };
 
-  return (
-    <RecipeView>
-      <RecipeText>What type of meal?</RecipeText>
-      <MealButtonsView>
-        <CustomButton onPress={() => {}}>
-          <ButtonText>Breakfast</ButtonText>
-        </CustomButton>
-        <CustomButton onPress={() => {}}>
-          <ButtonText>Lunch</ButtonText>
-        </CustomButton>
-        <CustomButton onPress={() => {}}>
-          <ButtonText>Dinner</ButtonText>
-        </CustomButton>
-        <CustomButton onPress={() => {}}>
-          <ButtonText>Dessert</ButtonText>
-        </CustomButton>
-      </MealButtonsView>
-      <RecipeText>What current ingredients do you have?</RecipeText>
-      <CustomTextInput
-        placeholder="Enter ingredients here"
-        multiline
-        numberOfLines={4}
-        value={{ key: "ingredients" }}
-        onChangeText={(text) => setIngredients(text)}
-      />
-      <RecipeText>
-        What condiments, seasonings, and sauces you have on hand?
-      </RecipeText>
-      <RecipeText>Preferred Meal Prep Time: {mealPrepTime} minutes</RecipeText>
-      <Slider
-        style={{ width: "100%", height: 40 }}
-        minimumValue={15}
-        maximumValue={60}
-        step={5}
-        minimumTrackTintColor="#7bd9f1"
-        maximumTrackTintColor="#262626"
-        value={mealPrepTime}
-        onValueChange={onSliderValueChange}
-      />
-      <RecipeText>Dietary Preferences</RecipeText>
-      <CustomTextInput
-        placeholder="Any other dietary preferences?"
-        multiline
-        numberOfLines={4}
-        value={{ key: "dietaryPreferences" }}
-        onChangeText={(text) => setDietaryPreferences(text)}
-      />
-      <RecipeText>Level of difficulty</RecipeText>
-      <MealButtonsView>
-        <CustomButton onPress={() => {}}>
-          <ButtonText>Easy</ButtonText>
-        </CustomButton>
-        <CustomButton onPress={() => {}}>
-          <ButtonText>Medium</ButtonText>
-        </CustomButton>
-        <CustomButton onPress={() => {}}>
-          <ButtonText>Hard</ButtonText>
-        </CustomButton>
-      </MealButtonsView>
-      <ConsentView
-        style={{ flexDirection: "row", alignItems: "center", marginTop: 16 }}
-      >
-        <Switch
-          value={includeExtraIngredients}
-          onValueChange={(value) => setIncludeExtraIngredients(value)}
-        />
-        <ConsentText>
-          Deliberately include recipes that incorporate one or more ingredients
-          I have not listed
-        </ConsentText>
-      </ConsentView>
-      <SubmitTouchable
-        onPress={() => {
-          updateCarrots(carrotCount - 1); // Update carrotCount
-          route.params.updateCarrots(carrotCount - 1); // Call the update function in Home Screen
-        }}
-      >
-        <SubmitText>Generate Recipes</SubmitText>
-      </SubmitTouchable>
-    </RecipeView>
-  );
+    return (
+        <RecipeView>
+            <RecipeText>What type of meal?</RecipeText>
+            <MealButtonsView>
+                <CustomButton onPress={() => { }}>
+                    <ButtonText>Breakfast</ButtonText>
+                </CustomButton>
+                <CustomButton onPress={() => { }}>
+                    <ButtonText>Lunch</ButtonText>
+                </CustomButton>
+                <CustomButton onPress={() => { }}>
+                    <ButtonText>Dinner</ButtonText>
+                </CustomButton>
+                <CustomButton onPress={() => { }}>
+                    <ButtonText>Dessert</ButtonText>
+                </CustomButton>
+            </MealButtonsView>
+            <RecipeText>What current ingredients do you have?</RecipeText>
+            <CustomTextInput
+                placeholder="Enter ingredients here"
+                multiline
+                numberOfLines={4}
+                value={{ key: "ingredients" }}
+                onChangeText={(text) => setIngredients(text)}
+            />
+            <RecipeText>
+                What condiments, seasonings, and sauces you have on hand?
+            </RecipeText>
+            <RecipeText>Preferred Meal Prep Time: {mealPrepTime} minutes</RecipeText>
+            <Slider
+                style={{ width: "100%", height: 40 }}
+                minimumValue={15}
+                maximumValue={60}
+                step={5}
+                minimumTrackTintColor="#7bd9f1"
+                maximumTrackTintColor="#262626"
+                value={mealPrepTime}
+                onValueChange={onSliderValueChange}
+            />
+            <RecipeText>Dietary Preferences</RecipeText>
+            <CustomTextInput
+                placeholder="Any other dietary preferences?"
+                multiline
+                numberOfLines={4}
+                value={{ key: "dietaryPreferences" }}
+                onChangeText={(text) => setDietaryPreferences(text)}
+            />
+            <RecipeText>Level of difficulty</RecipeText>
+            <MealButtonsView>
+                <CustomButton onPress={() => { }}>
+                    <ButtonText>Easy</ButtonText>
+                </CustomButton>
+                <CustomButton onPress={() => { }}>
+                    <ButtonText>Medium</ButtonText>
+                </CustomButton>
+                <CustomButton onPress={() => { }}>
+                    <ButtonText>Hard</ButtonText>
+                </CustomButton>
+            </MealButtonsView>
+            <ConsentView
+                style={{ flexDirection: "row", alignItems: "center", marginTop: 16 }}
+            >
+                <Switch
+                    value={includeExtraIngredients}
+                    onValueChange={(value) => setIncludeExtraIngredients(value)}
+                />
+                <ConsentText>
+                    Deliberately include recipes that incorporate one or more ingredients
+                    I have not listed
+                </ConsentText>
+            </ConsentView>
+            <SubmitTouchable
+                onPress={() => {
+                    handleGenerateRecipes();
+                }}
+            >
+                <SubmitText>Generate Recipes</SubmitText>
+            </SubmitTouchable>
+        </RecipeView>
+    );
 };
 
 export default InputIngredientsScreen;
@@ -120,15 +123,14 @@ const RecipeView = styled.View`
 const MealButtonsView = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  padding: 10px;
+  padding: 15px 0px;
 `;
 
 const CustomButton = styled.TouchableOpacity`
   flex: 1;
   background-color: #7bd9f1;
-  margin-left: 5px; /* Adjust the spacing between buttons */
-  margin-right: 5px; /* Adjust the spacing between buttons */
-  border-radius: 20px;
+  margin: 0px 3px; /* Adjust the spacing between buttons */
+  border-radius: 15px;
   overflow: hidden;
 `;
 
@@ -137,8 +139,7 @@ const ButtonText = styled.Text`
   font-family: BalooRegular;
   font-size: 16px;
   text-align: center;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding: 15px 5px;
 `;
 
 const RecipeText = styled.Text`
@@ -147,7 +148,6 @@ const RecipeText = styled.Text`
   font-size: 16px;
   font-weight: 600;
   padding-top: 15px;
-  padding-top: 10px;
 `;
 
 const InfoText = styled.Text`
@@ -168,6 +168,7 @@ const SubmitTouchable = styled.TouchableOpacity`
   padding: 12px;
   margin-top: 16;
   align-items: center;
+  border-radius: 15px;
 `;
 
 const ConsentText = styled.Text`

@@ -7,6 +7,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "./HomeScreen";
 import MyRecipesScreen from "./MyRecipesScreen";
 import InputIngredientsScreen from "./InputIngredientsScreen";
+import LoadingScreen from "./LoadingScreen";
 const Stack = createStackNavigator();
 
 function App() {
@@ -53,6 +54,11 @@ function App() {
             headerTintColor: "white", // Set the color of the header text and buttons
             headerShadowVisible: false, // Set this to false to remove the header shadow
           }}
+        />
+        <Stack.Screen
+          name="Loading"
+          component={LoadingScreen}
+          options={{ headerShown: false }}
         />
         {/* Adding other idea for now...
         <Stack.Screen name="GPTRecipeIdeas" component={GPTRecipeIdeasScreen} />   */}
