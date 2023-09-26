@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -12,12 +12,21 @@ import {
 import Slider from "@react-native-community/slider";
 
 /* This is the screen for gathering data (ingredients, etc.) that will be input for the chatGPT prompt */
-const InputIngredientsScreen = ({ navigation }) => {
+const InputIngredientsScreen = ({ navigation, route }) => {
   const [ingredients, setIngredients] = useState("");
   const [mealPrepTime, setMealPrepTime] = useState(15);
   const [dietaryPreferences, setDietaryPreferences] = useState({});
   const [includeExtraIngredients, setIncludeExtraIngredients] = useState(false);
+  const [carrotCount, setCarrotCount] = useState(route.params.carrotCount);
   const screenWidth = Dimensions.get("window").width;
+
+  const updateCarrots = (newAmount) => {
+    setCarrotCount(newAmount);
+  };
+  useEffect(() => {
+    // If you want to update carrotCount when it changes in the parent screen
+    setCarrotCount(route.params.carrotCount);
+  }, [route.params.carrotCount]);
 
   const onSliderValueChange = (value) => {
     setMealPrepTime(value);
@@ -146,7 +155,10 @@ const InputIngredientsScreen = ({ navigation }) => {
           marginTop: 16,
           alignItems: "center",
         }}
-        onPress={handleGenerateRecipes}
+        onPress={() => {
+          updateCarrots(carrotCount - 1); // Update carrotCount
+          route.params.updateCarrots(carrotCount - 1); // Call the update function in Home Screen
+        }}
       >
         <Text style={{ color: "white", fontSize: 18 }}>Generate Recipes</Text>
       </TouchableOpacity>

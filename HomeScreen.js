@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Button, Icon } from "react-native-elements";
@@ -9,12 +9,16 @@ import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
+import styled from "styled-components";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const bottomSheetModalRef = useRef(null);
   const snapPoints = ["85%"];
-  const amountOfCarrots = 8;
+  const [amountOfCarrots, setAmountOfCarrots] = useState(8);
+  const updateCarrots = (newAmount) => {
+    setAmountOfCarrots(newAmount);
+  };
   function handlePresentModal() {
     bottomSheetModalRef.current?.present();
   }
@@ -29,51 +33,17 @@ const HomeScreen = () => {
 
   return (
     <BottomSheetModalProvider>
-      <View style={{ flex: 1 }}>
-        {/* Gradient Background */}
+      <HomeView>
         <LinearGradient
-          colors={["#A2E1ED", "#E59758"]} // See how these work...might need to change.
+          colors={["#A2E1ED", "#E59758"]}
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
-          {/* Image */}
-          <Image
-            source={require("./assets/chatcuisine_home.png")}
-            style={{
-              width: "80%",
-              height: "50%",
-              resizeMode: "stretch",
-              borderRadius: 25,
-              marginTop: 40,
-            }}
-          />
-
-          {/* Title and Description */}
-          <Text
-            style={{
-              fontSize: 24,
-              marginTop: 20,
-              fontWeight: "bold",
-              color: "white",
-              fontFamily: "BalooRegular",
-            }}
-          >
-            Chat Cuisine
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              marginTop: 10,
-              textAlign: "center",
-              width: "68%",
-              color: "white",
-              fontFamily: "BalooRegular",
-            }}
-          >
+          <HomeImage source={require("./assets/chatcuisine_home.png")} />
+          <TitleText>Chat Cuisine</TitleText>
+          <DescriptionText>
             Get some fresh and unique meal ideas based on ingredients you have.
             Spice up your meal life!
-          </Text>
-
-          {/* Let's Cook Button */}
+          </DescriptionText>
           <Button
             title="Let's cook 🍴"
             titleStyle={{
@@ -99,7 +69,10 @@ const HomeScreen = () => {
             }}
             onPress={() => {
               navigation.removeListener;
-              navigation.navigate("Define Your Recipe"); // Navigate to the "InputIngredients" screen
+              navigation.navigate("Define Your Recipe", {
+                carrotCount: amountOfCarrots,
+                updateCarrots: updateCarrots,
+              }); // Navigate to the "InputIngredients" screen
             }}
           />
 
@@ -114,9 +87,7 @@ const HomeScreen = () => {
               navigation.navigate("MyRecipes"); // Navigate to the "Recipes" screen
             }}
           >
-            <Text style={{ fontSize: 12, marginRight: 5, color: "#faf0de" }}>
-              View previous recipes
-            </Text>
+            <PreviousText>View previous recipes</PreviousText>
             <Icon
               name="chevron-right"
               type="font-awesome"
@@ -136,20 +107,9 @@ const HomeScreen = () => {
             }}
             onPress={handlePresentModal}
           >
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: "bold",
-                color: "white",
-                fontFamily: "BalooRegular",
-              }}
-            >
-              {amountOfCarrots} 🥕
-            </Text>
+            <CarrotText>{amountOfCarrots} 🥕</CarrotText>
           </TouchableOpacity>
         </LinearGradient>
-
-        {/* Render BuyCarrotsModal */}
         <BottomSheetModal
           ref={bottomSheetModalRef}
           index={0}
@@ -157,9 +117,58 @@ const HomeScreen = () => {
         >
           <BuyCarrotsModal carrotQuantity={amountOfCarrots} />
         </BottomSheetModal>
-      </View>
+      </HomeView>
     </BottomSheetModalProvider>
   );
 };
 
 export default HomeScreen;
+
+const HomeView = styled.View`
+  flex: 1;
+`;
+
+const CookButton = styled.Button`
+  padding-left: 13px;
+  padding-right: 13px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+`;
+const CarrotText = styled.Text`
+  font-size: 18px;
+  font-weight: 600;
+  color: #faf0de;
+  font-family: "BalooRegular";
+`;
+
+const PreviousText = styled.Text`
+  font-size: 12px;
+  margin-right: 5px;
+  color: #faf0de;
+`;
+
+const DescriptionText = styled.Text`
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+  width: 68%;
+  color: #faf0de;
+  font-family: "BalooRegular";
+`;
+
+const TitleText = styled.Text`
+  font-size: 24px;
+  margin-top: 20px;
+  font-weight: 700;
+  color: #faf0de;
+  font-family: "BalooRegular";
+`;
+
+const HomeImage = styled.Image`
+  width: 80%;
+  height: 50%;
+  border-radius: 25px;
+  margin-top: 40px;
+`;
