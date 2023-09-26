@@ -14,7 +14,7 @@ import styled from "styled-components";
 const HomeScreen = () => {
   const navigation = useNavigation();
   const bottomSheetModalRef = useRef(null);
-  const snapPoints = ["85%"];
+  const snapPoints = ["90%"];
   const [amountOfCarrots, setAmountOfCarrots] = useState(8);
   const updateCarrots = (newAmount) => {
     setAmountOfCarrots(newAmount);
