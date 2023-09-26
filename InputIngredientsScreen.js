@@ -143,6 +143,7 @@ const ButtonText = styled.Text`
 
 const RecipeText = styled.Text`
   color: white;
+  font-family: BalooRegular;
   font-size: 16px;
   font-weight: 600;
   padding-top: 15px;
@@ -156,6 +157,7 @@ const InfoText = styled.Text`
 `;
 
 const SubmitText = styled.Text`
+  font-family: BalooRegular;
   color: white;
   font-size: 18;
 `;
@@ -170,6 +172,7 @@ const SubmitTouchable = styled.TouchableOpacity`
 
 const ConsentText = styled.Text`
   color: white;
+  font-family: BalooRegular;
   font-size: 12px;
   margin-left: 8;
 `;

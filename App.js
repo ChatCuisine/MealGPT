@@ -29,6 +29,11 @@ function App() {
             headerStyle: {
               backgroundColor: "#121212", // Set the background color of the header
             },
+            headerTitleStyle: {
+              fontFamily: "BalooRegular", // Set the desired font family
+              fontSize: 20, // Set the font size
+              fontWeight: "bold", // Set the font weight (e.g., bold)
+            },
             headerTintColor: "white", // Set the color of the header text and buttons
             headerShadowVisible: false, // Set this to false to remove the header shadow
           }}
@@ -39,6 +44,11 @@ function App() {
           options={{
             headerStyle: {
               backgroundColor: "#121212", // Set the background color of the header
+            },
+            headerTitleStyle: {
+              fontFamily: "BalooRegular", // Set the desired font family
+              fontSize: 20, // Set the font size
+              fontWeight: "bold", // Set the font weight (e.g., bold)
             },
             headerTintColor: "white", // Set the color of the header text and buttons
             headerShadowVisible: false, // Set this to false to remove the header shadow
