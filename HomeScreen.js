@@ -8,6 +8,7 @@ import { useFonts } from "expo-font";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
+  BottomSheetHandle,
 } from "@gorhom/bottom-sheet";
 import styled from "styled-components";
 
@@ -69,12 +70,20 @@ const HomeScreen = () => {
           ref={bottomSheetModalRef}
           index={0}
           snapPoints={snapPoints}
+          handleComponent={() => <BottomSheetHandle style={handleStyle} />}
         >
           <BuyCarrotsModal carrotQuantity={amountOfCarrots} />
         </BottomSheetModal>
       </HomeView>
     </BottomSheetModalProvider>
   );
+};
+
+const handleStyle = {
+  backgroundColor: "#A2E1ED", // Change the background color
+  width: "100%", // Change the width
+  borderTopLeftRadius: 15, // Adjust the top-left border radius
+  borderTopRightRadius: 15, // Adjust the top-right border radius
 };
 
 export default HomeScreen;

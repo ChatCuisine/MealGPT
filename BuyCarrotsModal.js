@@ -54,6 +54,7 @@ const ModalScroll = styled.ScrollView`
   flex: 1;
   flex-grow: 1;
   padding-bottom: 30;
+  background-color: #a2e1ed;
 `;
 
 const ModalImage = styled.Image`
