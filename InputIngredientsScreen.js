@@ -10,6 +10,7 @@ import {
   Button,
 } from "react-native";
 import Slider from "@react-native-community/slider";
+import styled from "styled-components";
 
 /* This is the screen for gathering data (ingredients, etc.) that will be input for the chatGPT prompt */
 const InputIngredientsScreen = ({ navigation, route }) => {

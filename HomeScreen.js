@@ -26,7 +26,6 @@ const HomeScreen = () => {
   const [fontsLoaded] = useFonts({
     BalooRegular: require("./fonts/Baloo-Regular.ttf"),
   });
-
   if (!fontsLoaded) {
     return null;
   }
@@ -34,39 +33,14 @@ const HomeScreen = () => {
   return (
     <BottomSheetModalProvider>
       <HomeView>
-        <LinearGradient
-          colors={["#A2E1ED", "#E59758"]}
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
+        <CustomLinearGradient colors={["#A2E1ED", "#E59758"]}>
           <HomeImage source={require("./assets/chatcuisine_home.png")} />
           <TitleText>Chat Cuisine</TitleText>
           <DescriptionText>
             Get some fresh and unique meal ideas based on ingredients you have.
             Spice up your meal life!
           </DescriptionText>
-          <Button
-            title="Let's cook 🍴"
-            titleStyle={{
-              color: "white",
-              fontFamily: "BalooRegular",
-              fontSize: 18,
-            }}
-            buttonStyle={{
-              backgroundColor: "#7bd9f1",
-              paddingVertical: 15,
-              paddingHorizontal: 30,
-              borderRadius: 20,
-            }}
-            containerStyle={{
-              borderRadius: 30,
-              overflow: "hidden",
-              width: "50%",
-              marginTop: 20,
-              color: "#faf0de",
-              marginTop: 10,
-              borderRadius: 20,
-              overflow: "hidden",
-            }}
+          <ButtonContainer
             onPress={() => {
               navigation.removeListener;
               navigation.navigate("Define Your Recipe", {
@@ -74,42 +48,23 @@ const HomeScreen = () => {
                 updateCarrots: updateCarrots,
               }); // Navigate to the "InputIngredients" screen
             }}
-          />
+          >
+            <ButtonTitle>Let's cook 🍴</ButtonTitle>
+          </ButtonContainer>
 
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginTop: 20,
-            }}
+          <PreviousTouchable
             onPress={() => {
               navigation.removeListener;
               navigation.navigate("MyRecipes"); // Navigate to the "Recipes" screen
             }}
           >
             <PreviousText>View previous recipes</PreviousText>
-            <Icon
-              name="chevron-right"
-              type="font-awesome"
-              size={10}
-              color="white"
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 20,
-              width: "32%",
-              height: "14%",
-            }}
-            onPress={handlePresentModal}
-          >
+            <ChevronRightIcon />
+          </PreviousTouchable>
+          <CarrortsTouchable onPress={handlePresentModal}>
             <CarrotText>{amountOfCarrots} 🥕</CarrotText>
-          </TouchableOpacity>
-        </LinearGradient>
+          </CarrortsTouchable>
+        </CustomLinearGradient>
         <BottomSheetModal
           ref={bottomSheetModalRef}
           index={0}
@@ -128,25 +83,25 @@ const HomeView = styled.View`
   flex: 1;
 `;
 
-const CookButton = styled.Button`
-  padding-left: 13px;
-  padding-right: 13px;
-  flex-direction: row;
+const CustomLinearGradient = styled(LinearGradient)`
+  flex: 1;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  height: 80px;
-`;
-const CarrotText = styled.Text`
-  font-size: 18px;
-  font-weight: 600;
-  color: #faf0de;
-  font-family: "BalooRegular";
 `;
 
-const PreviousText = styled.Text`
-  font-size: 12px;
-  margin-right: 5px;
+const HomeImage = styled.Image`
+  width: 80%;
+  height: 50%;
+  border-radius: 25px;
+  margin-top: 40px;
+`;
+
+const TitleText = styled.Text`
+  font-size: 24px;
+  margin-top: 20px;
+  font-weight: 700;
   color: #faf0de;
+  font-family: "BalooRegular";
 `;
 
 const DescriptionText = styled.Text`
@@ -158,17 +113,56 @@ const DescriptionText = styled.Text`
   font-family: "BalooRegular";
 `;
 
-const TitleText = styled.Text`
-  font-size: 24px;
+const ButtonContainer = styled.TouchableOpacity`
+  background-color: #7bd9f1;
+  padding-vertical: 15px;
+  padding-horizontal: 30px;
+  border-radius: 20px;
+  width: 50%;
   margin-top: 20px;
-  font-weight: 700;
   color: #faf0de;
-  font-family: "BalooRegular";
+  margin-top: 10px;
+  border-radius: 20px;
+  overflow: hidden;
 `;
 
-const HomeImage = styled.Image`
-  width: 80%;
-  height: 50%;
-  border-radius: 25px;
-  margin-top: 40px;
+const ButtonTitle = styled.Text`
+  color: white;
+  font-family: BalooRegular;
+  font-size: 18px;
+`;
+
+const PreviousTouchable = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  margin-top: 20;
+`;
+
+const PreviousText = styled.Text`
+  font-size: 12px;
+  margin-right: 5px;
+  color: #faf0de;
+`;
+
+const ChevronRightIcon = styled(Icon).attrs({
+  name: "chevron-right",
+  type: "font-awesome",
+  size: 10,
+  color: "white",
+})``;
+
+const CarrortsTouchable = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  width: 100%;
+  height: 14%;
+`;
+
+const CarrotText = styled.Text`
+  font-size: 18px;
+  font-weight: 600;
+  color: #faf0de;
+  font-family: "BalooRegular";
 `;
