@@ -9,7 +9,7 @@ const BuyCarrotsModal = ({ carrotQuantity }) => {
     <CarrotView>
       <ModalScroll>
         <CustomLinearGradient colors={["#A2E1ED", "#E59758"]}>
-          <ModalImage source={require("./assets/chatcuisine_home.png")} />
+          <ModalImage source={require("./assets/chatcuisine_carrots.png")} />
           <ModalTitle>Buy More Carrots</ModalTitle>
           <ModalDescription>
             To write exquiste recipes for yourself, our chef need to be given
@@ -17,7 +17,7 @@ const BuyCarrotsModal = ({ carrotQuantity }) => {
           </ModalDescription>
           <ModalEquation>1 carrot = 1 recipe</ModalEquation>
           <ModalCarrotCount>
-            You currently have {carrotQuantity} carrot
+            You currently have {carrotQuantity} carrot(s)
           </ModalCarrotCount>
           <PurchaseFirstButton>
             <FirstButtonText>Purchase 7 carrots for $1.99</FirstButtonText>
