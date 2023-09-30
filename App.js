@@ -15,6 +15,7 @@ function App() {
     I admit I do not know much about it but just chose react navigation for now.
     We could install expo-router if we want to try that instead - some people say it is easier?
     https://www.reddit.com/r/reactnative/comments/14apzyj/exporouter_vs_react_navigation/*/
+    //TODO extract styles into one shared style for the different stacks.
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">

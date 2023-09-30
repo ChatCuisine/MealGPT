@@ -1,16 +1,17 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://api.openai.com/v1/chat'; // Replace with the ChatGPT API base URL
+const BASE_URL = 'https://api.openai.com/v1/chat';
 
-const axiosInstance = axios.create({
-    baseURL: BASE_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
-
-export const createChatCompletion = async (prompt) => {
+export const createChatCompletion = async (prompt, apiKey) => {
     try {
+        const axiosInstance = axios.create({
+            baseURL: BASE_URL,
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
         const response = await axiosInstance.post('/completions', {
             model: 'gpt-3.5-turbo',
             messages: [

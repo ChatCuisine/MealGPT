@@ -123,7 +123,7 @@ const DescriptionText = styled.Text`
 `;
 
 const ButtonContainer = styled.TouchableOpacity`
-  background-color: #7bd9f1;
+  background-color: #3bb9f1;
   padding-vertical: 15px;
   padding-horizontal: 30px;
   border-radius: 20px;

@@ -7,7 +7,7 @@ import { OPENAI_API_KEY } from '@env';
 import { createChatCompletion } from '../api/ChatGPTService';
 
 const LoadingScreen = ({ route }) => {
-    const navigation = useNavigation();
+    // const navigation = useNavigation();
     const [isLoading, setIsLoading] = useState(true);
     const [response, setResponse] = useState('');
     const [error, setError] = useState(null);
@@ -20,12 +20,12 @@ const LoadingScreen = ({ route }) => {
                 const axiosInstance = axios.create({
                     baseURL: 'https://api.openai.com/v1/completions',
                     headers: {
-                        Authorization: `Bearer ${apiKey}`,
+                        'Authorization': `Bearer ${apiKey}`,
                         'Content-Type': 'application/json',
                     },
                 });
 
-                const chatResponse = await createChatCompletion(userPrompt, axiosInstance);
+                const chatResponse = await createChatCompletion(userPrompt, apiKey, axiosInstance);
                 setResponse(chatResponse);
                 setIsLoading(false);
 
@@ -46,7 +46,7 @@ const LoadingScreen = ({ route }) => {
     }, [route.params.userPrompt]);
 
     return (
-        <Container>
+        <ScrollContainer>
             <LoadingImage source={require('../assets/chatcuisine_loadingrecipes.png')} />
             {isLoading ? (
                 <LoadingView>
@@ -59,17 +59,16 @@ const LoadingScreen = ({ route }) => {
                 </Animated.View>
             )}
             {!isLoading && error && <ErrorText>{error}</ErrorText>}
-        </Container>
+        </ScrollContainer>
     );
 };
 
 export default LoadingScreen;
 
-const Container = styled.View`
-  flex: 1;
+const ScrollContainer = styled.ScrollView`
+  flexGrow: 1;
   background-color: #121212;
   padding: 16px;
-  align-items: center;
 `;
 
 const LoadingView = styled.View`

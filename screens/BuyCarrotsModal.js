@@ -1,38 +1,73 @@
-import React from "react";
+import React, {useRef} from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import styled from "styled-components";
+import { PanResponder } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
 
+//TODO add integration with applepay if apple device or googlepay if android?
+//we could just choose one like stripe but applepay is so slick 
 const BuyCarrotsModal = ({ carrotQuantity }) => {
-    return (
-        <CarrotView>
-            <ModalScroll>
-                <CustomLinearGradient colors={["#224761", "#C0BBAC", "#224761"]}>
-                    <ModalImage source={require("../assets/chatcuisine_carrots.png")} />
-                    <ModalTitle>Buy More Carrots</ModalTitle>
-                    <ModalDescription>
-                        To write exquiste recipes for yourself, our chef need to be given
-                        more carrots
-                    </ModalDescription>
-                    <ModalEquation>1 carrot = 1 recipe</ModalEquation>
-                    <ModalCarrotCount>
-                        You currently have {carrotQuantity} carrot(s)
-                    </ModalCarrotCount>
-                    <PurchaseFirstButton>
-                        <FirstButtonText>Purchase 7 carrots for $1.99</FirstButtonText>
-                    </PurchaseFirstButton>
-                    <PurchaseSecondButton>
-                        <SecondButtonText>Purchase 30 carrots for $4.99</SecondButtonText>
-                    </PurchaseSecondButton>
-                    <ModalDisclaimer>
-                        This app generates recipes using AI. You can purchase carrots to
-                        generate new recipes. We do not guarantee the quality of the AI
-                        generated recipes, and are not liable for any damage or losses from
-                        using the app.
-                    </ModalDisclaimer>
-                </CustomLinearGradient>
-            </ModalScroll>
-        </CarrotView>
-    );
+  const navigation = useNavigation();
+  const updateCarrots = (newAmount) => {
+    setAmountOfCarrots(newAmount);
+  };
+  // Initialize PanResponder
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderMove: (e, gestureState) => {
+        // Check if the user has dragged the modal down by a certain amount (e.g., 50 pixels)
+        if (gestureState.dy > 30) {
+          // You can add any additional checks or conditions here if needed
+          // Close the modal or perform any desired action
+          console.log('Modal is being dragged down');
+          navigation.removeListener;
+          navigation.navigate("Home"); // Navigate to the "Home" screen
+          //, {
+            // TODO figure out this count later
+            //carrotCount: amountOfCarrots,
+            //updateCarrots: updateCarrots,
+          //}); 
+        }
+      },
+      onPanResponderRelease: () => {
+        navigation.removeListener;
+        navigation.navigate("Home"); 
+        // Reset any state or perform actions when the user releases the touch
+      },
+    })
+  ).current;
+
+  return (
+    <CarrotView>
+      <ModalScroll {...panResponder.panHandlers}>
+        <CustomLinearGradient colors={["#224761", "#C0BBAC", "#224761"]}>
+          <ModalImage source={require("../assets/chatcuisine_carrots.png")} />
+          <ModalTitle>Buy More Carrots</ModalTitle>
+          <ModalDescription>
+            To write exquiste recipes for yourself, our chef needs to be given carrots
+          </ModalDescription>
+          <ModalEquation>1 carrot = 1 inquiry to recieve 3 recipes</ModalEquation>
+          <ModalCarrotCount>
+            You currently have {carrotQuantity} carrot(s)
+          </ModalCarrotCount>
+          <PurchaseFirstButton>
+            <FirstButtonText>Purchase 7 carrots for $1.99</FirstButtonText>
+          </PurchaseFirstButton>
+          <PurchaseSecondButton>
+            <SecondButtonText>Purchase 30 carrots for $4.99</SecondButtonText>
+          </PurchaseSecondButton>
+          <ModalDisclaimer>
+            This app generates recipes using AI. You can purchase carrots to
+            generate new recipes. We do not guarantee the quality of the AI
+            generated recipes, and are not liable for any damage or losses from
+            using the app.
+          </ModalDisclaimer>
+        </CustomLinearGradient>
+      </ModalScroll>
+    </CarrotView>
+  );
 };
 
 export default BuyCarrotsModal;
@@ -51,7 +86,7 @@ const CustomLinearGradient = styled(LinearGradient)`
 const ModalScroll = styled.ScrollView`
   flex: 1;
   flex-grow: 1;
-  padding-bottom: 30;
+  padding-bottom: 30px;
   background-color: #224761;
 `;
 
@@ -64,15 +99,15 @@ const ModalImage = styled.Image`
 
 const ModalTitle = styled.Text`
   font-size: 24px;
-  margin-top: 20;
+  margin-top: 20px;
   font-weight: 800;
   color: white;
   font-family: "BalooRegular";
 `;
 
 const ModalDescription = styled.Text`
-  font-size: 14;
-  margin-top: 10;
+  font-size: 14px;
+  margin-top: 10px;
   text-align: center;
   width: 68%;
   color: white;
@@ -80,8 +115,8 @@ const ModalDescription = styled.Text`
 `;
 
 const ModalEquation = styled.Text`
-  font-size: 14;
-  margin-top: 10;
+  font-size: 14px;
+  margin-top: 10px;
   text-align: center;
   width: 68%;
   color: white;
@@ -98,8 +133,8 @@ const ModalCarrotCount = styled.Text`
 `;
 
 const ModalDisclaimer = styled.Text`
-  font-size: 10;
-  margin-top: 10;
+  font-size: 10px;
+  margin-top: 10px;
   text-align: center;
   width: 68%;
   color: white;

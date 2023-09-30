@@ -1,67 +1,89 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Switch, Keyboard, TouchableWithoutFeedback } from "react-native";
 import Slider from "@react-native-community/slider";
 import styled from "styled-components";
 
 const InputIngredientsScreen = ({ navigation, route }) => {
+    const [carrotCount, setCarrotCount] = useState(route.params.carrotCount);
+    const [focusedField, setFocusedField] = useState(null);
     const [ingredients, setIngredients] = useState("");
     const [mealPrepTime, setMealPrepTime] = useState(15);
-    const [dietaryPreferences, setDietaryPreferences] = useState({});
+    const [dietaryPreferences, setDietaryPreferences] = useState("");
+    const [seasonings, setSeasonings] = useState("");
+    const [selectedMeal, setSelectedMeal] = useState(null); // Track selected meal
+    const [selectedDifficulty, setSelectedDifficulty] = useState(null); // Track selected difficulty
     const [includeExtraIngredients, setIncludeExtraIngredients] = useState(false);
-    const [carrotCount, setCarrotCount] = useState(route.params.carrotCount);
+    const ingredientInputRef = useRef(null);
+    const seasoningInputRef = useRef(null); // Ref for condiments and seasonings input
 
     const updateCarrots = (newAmount) => {
         setCarrotCount(newAmount);
     };
+
     useEffect(() => {
         setCarrotCount(route.params.carrotCount);
     }, [route.params.carrotCount]);
+
+    const focusTextInput = (ref) => {
+        if (ref.current) {
+            ref.current.focus();
+        }
+    };
 
     const onSliderValueChange = (value) => {
         setMealPrepTime(value);
     };
 
     const handleScreenPress = () => {
-        // Dismiss the keyboard when the screen is pressed
         Keyboard.dismiss();
+    };
+
+    const handleMealSelection = (meal) => {
+        setSelectedMeal(meal);
+    };
+
+    const handleDifficultySelection = (difficulty) => {
+        setSelectedDifficulty(difficulty);
     };
 
     const buildPrompt = (
         ingredients,
+        seasonings,
+        selectedMeal, 
+        selectedDifficulty,
         mealPrepTime,
         dietaryPreferences,
-        includeExtraIngredients,
+        includeExtraIngredients
     ) => {
-        // Build the string using the provided parameters
-        const prompt = `I have 2 lemons, 2 chicken breasts, lettuce, a white onion, and cherry tomatoes.
-        I would like a meal that takes under 30 minutes to make.
-        I also have lemon pepper, thyme, italian seasoning.
-        I would like something over 500 calories.
-        I am open to getting ingredients not listed.`
-                        /*`Ingredients: ${ingredients}
-                        \nMeal Prep Time: ${mealPrepTime} minutes
-                        \nDietary Preferences: ${dietaryPreferences}
-                        \nInclude Extra Ingredients: ${includeExtraIngredients}`;*/
+        //TODO fix and add code to prevent injection and sanitize fields first.
+        //Perhaps split up this screen and do it somewhere else
+        const prompt = 
+        `I have these ingredients: ${ingredients}.
+        \nI have these seasonings: ${seasonings}.
+        \nI would prefer to make this for ${selectedMeal}.
+        \nMeal difficulty complexity: ${selectedDifficulty}.
+        \nOther dietary preferences: ${dietaryPreferences}.
+        \nFor meal prep time, please only include meals around or under ${mealPrepTime} minutes.
+        \nOther dietary preferences: ${dietaryPreferences}.
+        \nIt is ${includeExtraIngredients} that I am open to using other ingredients than what is listed.`;
 
         return prompt;
     };
 
     const handleGenerateRecipes = () => {
-        // Implement logic to generate recipes based on user input here
-        // Build the prompt string using the buildPrompt function
-        // TODO will need to add difficulty level and type of meal
         const prompt = buildPrompt(
             ingredients,
             mealPrepTime,
             dietaryPreferences,
-            includeExtraIngredients,
+            includeExtraIngredients
         );
-        // TODO - move the update carrots call to after the response comes back in the loading page.
 
-        updateCarrots(carrotCount - 1); // Update carrotCount 
-        route.params.updateCarrots(carrotCount - 1); // Call the update function in Home Screen
+        // TODO - move the update carrots call to after the response comes back in the loading page.
+        // Also do we need both of these calls here?
+        updateCarrots(carrotCount - 1);
+        route.params.updateCarrots(carrotCount - 1);
         navigation.removeListener;
-        navigation.navigate("Loading", { userPrompt: prompt }); // Navigate to the "Loading" screen
+        navigation.navigate("Loading", { userPrompt: prompt });
     };
 
     return (
@@ -69,30 +91,55 @@ const InputIngredientsScreen = ({ navigation, route }) => {
             <RecipeView>
                 <RecipeText>What type of meal?</RecipeText>
                 <MealButtonsView>
-                    <CustomButton onPress={() => { }}>
+                    <CustomButton
+                        onPress={() => handleMealSelection("Breakfast")}
+                        isSelected={selectedMeal === "Breakfast"}
+                    >
                         <ButtonText>Breakfast</ButtonText>
                     </CustomButton>
-                    <CustomButton onPress={() => { }}>
+                    <CustomButton
+                        onPress={() => handleMealSelection("Lunch")}
+                        isSelected={selectedMeal === "Lunch"}
+                    >
                         <ButtonText>Lunch</ButtonText>
                     </CustomButton>
-                    <CustomButton onPress={() => { }}>
+                    <CustomButton
+                        onPress={() => handleMealSelection("Dinner")}
+                        isSelected={selectedMeal === "Dinner"}
+                    >
                         <ButtonText>Dinner</ButtonText>
                     </CustomButton>
-                    <CustomButton onPress={() => { }}>
+                    <CustomButton
+                        onPress={() => handleMealSelection("Dessert")}
+                        isSelected={selectedMeal === "Dessert"}
+                    >
                         <ButtonText>Dessert</ButtonText>
                     </CustomButton>
                 </MealButtonsView>
-                <RecipeText>What current ingredients do you have?</RecipeText>
+                <RecipeText onPress={() => focusTextInput(ingredientInputRef)}>
+                    What current ingredients do you have?
+                </RecipeText>
                 <CustomTextInput
+                    ref={ingredientInputRef}
                     placeholder="Enter ingredients here"
                     multiline
                     numberOfLines={4}
-                    value={{ key: "ingredients" }}
+                    value={ingredients}
                     onChangeText={(text) => setIngredients(text)}
+                    onFocus={() => setFocusedField("ingredients")}
                 />
-                <RecipeText>
-                    What condiments, seasonings, and sauces you have on hand?
+                <RecipeText onPress={() => focusTextInput(seasoningInputRef)}>
+                    What condiments, seasonings, and sauces do you have on hand?
                 </RecipeText>
+                <CustomTextInput
+                    ref={seasoningInputRef}
+                    placeholder="Enter condiments, seasonings, and sauces here"
+                    multiline
+                    numberOfLines={4}
+                    value={seasonings}
+                    onChangeText={(text) => setSeasonings(text)}
+                    onFocus={() => setFocusedField("seasonings")}
+                />
                 <RecipeText>Preferred Meal Prep Time: {mealPrepTime} minutes</RecipeText>
                 <Slider
                     style={{ width: "100%", height: 40 }}
@@ -104,23 +151,24 @@ const InputIngredientsScreen = ({ navigation, route }) => {
                     value={mealPrepTime}
                     onValueChange={onSliderValueChange}
                 />
-                <RecipeText>Dietary Preferences</RecipeText>
-                <CustomTextInput
-                    placeholder="Any other dietary preferences?"
-                    multiline
-                    numberOfLines={4}
-                    value={{ key: "dietaryPreferences" }}
-                    onChangeText={(text) => setDietaryPreferences(text)}
-                />
                 <RecipeText>Level of difficulty</RecipeText>
                 <MealButtonsView>
-                    <CustomButton onPress={() => { }}>
+                    <CustomButton
+                        onPress={() => handleDifficultySelection("Easy")}
+                        isSelected={selectedDifficulty === "Easy"}
+                    >
                         <ButtonText>Easy</ButtonText>
                     </CustomButton>
-                    <CustomButton onPress={() => { }}>
+                    <CustomButton
+                        onPress={() => handleDifficultySelection("Medium")}
+                        isSelected={selectedDifficulty === "Medium"}
+                    >
                         <ButtonText>Medium</ButtonText>
                     </CustomButton>
-                    <CustomButton onPress={() => { }}>
+                    <CustomButton
+                        onPress={() => handleDifficultySelection("Hard")}
+                        isSelected={selectedDifficulty === "Hard"}
+                    >
                         <ButtonText>Hard</ButtonText>
                     </CustomButton>
                 </MealButtonsView>
@@ -150,7 +198,7 @@ const InputIngredientsScreen = ({ navigation, route }) => {
 
 export default InputIngredientsScreen;
 
-const RecipeView = styled.View`
+const RecipeView = styled.ScrollView`
   flex: 1;
   background-color: #121212;
   padding: 16px;
@@ -164,14 +212,14 @@ const MealButtonsView = styled.View`
 
 const CustomButton = styled.TouchableOpacity`
   flex: 1;
-  background-color: #7bd9f1;
-  margin: 0px 3px; /* Adjust the spacing between buttons */
+  background-color: ${(props) => (props.isSelected ? "#3bb9f1" : "#333")};
+  margin: 0px 3px;
   border-radius: 15px;
   overflow: hidden;
 `;
 
 const ButtonText = styled.Text`
-  color: white;
+  color: ${(props) => (props.isSelected ? "#333" : "white")};
   font-family: BalooRegular;
   font-size: 16px;
   text-align: center;
@@ -186,12 +234,6 @@ const RecipeText = styled.Text`
   padding-top: 15px;
 `;
 
-const InfoText = styled.Text`
-  color: #7bd9f1;
-  font-size: 12px;
-  margin-left: 5;
-`;
-
 const SubmitText = styled.Text`
   font-family: BalooRegular;
   color: white;
@@ -199,7 +241,7 @@ const SubmitText = styled.Text`
 `;
 
 const SubmitTouchable = styled.TouchableOpacity`
-  background-color: #7bd9f1;
+  background-color: #3bb9f1;
   border-radius: 5px;
   padding: 12px;
   margin-top: 16px;
