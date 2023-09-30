@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Button, Icon } from "react-native-elements";
+import { Icon } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
 import BuyCarrotsModal from "./BuyCarrotsModal";
 import { useFonts } from "expo-font";
@@ -25,7 +24,7 @@ const HomeScreen = () => {
     }
 
     const [fontsLoaded] = useFonts({
-        BalooRegular: require("./fonts/Baloo-Regular.ttf"),
+        BalooRegular: require("../fonts/Baloo-Regular.ttf"),
     });
     if (!fontsLoaded) {
         return null;
@@ -35,7 +34,7 @@ const HomeScreen = () => {
         <BottomSheetModalProvider>
             <HomeView>
                 <CustomLinearGradient colors={["#A2E1ED", "#E59758", "#381822"]}>
-                    <HomeImage source={require("./assets/chatcuisine_home.png")} />
+                    <HomeImage source={require("../assets/chatcuisine_home.png")} />
                     <TitleText>Chat Cuisine</TitleText>
                     <DescriptionText>
                         Get some fresh and unique meal ideas based on ingredients you have.
@@ -146,7 +145,7 @@ const ButtonTitle = styled.Text`
 const PreviousTouchable = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
-  margin-top: 20;
+  margin-top: 20px;
 `;
 
 const PreviousText = styled.Text`

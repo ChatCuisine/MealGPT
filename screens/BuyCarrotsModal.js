@@ -1,7 +1,5 @@
 import React from "react";
-import { View, Text, Image, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Button } from "react-native-elements";
 import styled from "styled-components";
 
 const BuyCarrotsModal = ({ carrotQuantity }) => {
@@ -9,7 +7,7 @@ const BuyCarrotsModal = ({ carrotQuantity }) => {
         <CarrotView>
             <ModalScroll>
                 <CustomLinearGradient colors={["#224761", "#C0BBAC", "#224761"]}>
-                    <ModalImage source={require("./assets/chatcuisine_carrots.png")} />
+                    <ModalImage source={require("../assets/chatcuisine_carrots.png")} />
                     <ModalTitle>Buy More Carrots</ModalTitle>
                     <ModalDescription>
                         To write exquiste recipes for yourself, our chef need to be given

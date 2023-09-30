@@ -4,10 +4,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 // Import your screens
-import HomeScreen from "./HomeScreen";
-import MyRecipesScreen from "./MyRecipesScreen";
-import InputIngredientsScreen from "./InputIngredientsScreen";
-import LoadingScreen from "./LoadingScreen";
+import HomeScreen from "./screens/HomeScreen";
+import MyRecipesScreen from "./screens/MyRecipesScreen";
+import InputIngredientsScreen from "./screens/InputIngredientsScreen";
+import LoadingScreen from "./screens/LoadingScreen";
 const Stack = createStackNavigator();
 
 function App() {
