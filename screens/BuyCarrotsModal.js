@@ -24,10 +24,10 @@ const BuyCarrotsModal = ({ carrotQuantity }) => {
                         <SecondButtonText>Purchase 30 carrots for $4.99</SecondButtonText>
                     </PurchaseSecondButton>
                     <ModalDisclaimer>
-                        This app generates stories using AI. You can purchase coins to
-                        generate new stories. We do not gurantee the quality of the AI
-                        generated stories, and are not liable for any damage or losses from
-                        using the app
+                        This app generates recipes using AI. You can purchase carrots to
+                        generate new recipes. We do not guarantee the quality of the AI
+                        generated recipes, and are not liable for any damage or losses from
+                        using the app.
                     </ModalDisclaimer>
                 </CustomLinearGradient>
             </ModalScroll>
