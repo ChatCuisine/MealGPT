@@ -35,6 +35,8 @@ const LoadingScreen = ({ route }) => {
         setResponse(chatResponse);
         setIsLoading(false);
 
+        await db.collection("recipes").add(response);
+
         // Fade in the response text
         Animated.timing(fadeAnim, {
           toValue: 1,
