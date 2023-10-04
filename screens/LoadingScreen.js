@@ -74,32 +74,11 @@ const LoadingScreen = ({ route }) => {
         </Animated.View>
       )}
       {!isLoading && error && <ErrorText>{error}</ErrorText>}
-      <StoreRecipes response={response} />
     </ScrollContainer>
   );
 };
 
 export default LoadingScreen;
-
-const StoreRecipes = ({ response }) => {
-  useEffect(() => {
-    const addResponseToFirestore = async () => {
-      try {
-        const docRef = await addDoc(collection(db, "recipes"), {
-          response: response, // Add the response to Firestore
-        });
-        console.log("Recipe written with ID: ", docRef.id);
-      } catch (error) {
-        console.error("Error adding recipe: ", error);
-      }
-    };
-    // Call the function when the component loads (ensure response is not null)
-    if (response) {
-      addResponseToFirestore();
-    }
-  }, [response]);
-  return null;
-};
 
 const ScrollContainer = styled.ScrollView`
   flexgrow: 1;

@@ -4,196 +4,198 @@ import Slider from "@react-native-community/slider";
 import styled from "styled-components";
 
 const InputIngredientsScreen = ({ navigation, route }) => {
-    const [carrotCount, setCarrotCount] = useState(route.params.carrotCount);
-    const [focusedField, setFocusedField] = useState(null);
-    const [ingredients, setIngredients] = useState("");
-    const [mealPrepTime, setMealPrepTime] = useState(15);
-    const [dietaryPreferences, setDietaryPreferences] = useState("");
-    const [seasonings, setSeasonings] = useState("");
-    const [selectedMeal, setSelectedMeal] = useState(null); // Track selected meal
-    const [selectedDifficulty, setSelectedDifficulty] = useState(null); // Track selected difficulty
-    const [includeExtraIngredients, setIncludeExtraIngredients] = useState(false);
-    const ingredientInputRef = useRef(null);
-    const seasoningInputRef = useRef(null); // Ref for condiments and seasonings input
+  const [carrotCount, setCarrotCount] = useState(route.params.carrotCount);
+  const [focusedField, setFocusedField] = useState(null);
+  const [ingredients, setIngredients] = useState("");
+  const [mealPrepTime, setMealPrepTime] = useState(15);
+  const [dietaryPreferences, setDietaryPreferences] = useState("");
+  const [seasonings, setSeasonings] = useState("");
+  const [selectedMeal, setSelectedMeal] = useState(null); // Track selected meal
+  const [selectedDifficulty, setSelectedDifficulty] = useState(null); // Track selected difficulty
+  const [includeExtraIngredients, setIncludeExtraIngredients] = useState(false);
+  const ingredientInputRef = useRef(null);
+  const seasoningInputRef = useRef(null); // Ref for condiments and seasonings input
 
-    const updateCarrots = (newAmount) => {
-        setCarrotCount(newAmount);
-    };
+  const updateCarrots = (newAmount) => {
+    setCarrotCount(newAmount);
+  };
 
-    useEffect(() => {
-        setCarrotCount(route.params.carrotCount);
-    }, [route.params.carrotCount]);
+  useEffect(() => {
+    setCarrotCount(route.params.carrotCount);
+  }, [route.params.carrotCount]);
 
-    const focusTextInput = (ref) => {
-        if (ref.current) {
-            ref.current.focus();
-        }
-    };
+  const focusTextInput = (ref) => {
+    if (ref.current) {
+      ref.current.focus();
+    }
+  };
 
-    const onSliderValueChange = (value) => {
-        setMealPrepTime(value);
-    };
+  const onSliderValueChange = (value) => {
+    setMealPrepTime(value);
+  };
 
-    const handleScreenPress = () => {
-        Keyboard.dismiss();
-    };
+  const handleScreenPress = () => {
+    Keyboard.dismiss();
+  };
 
-    const handleMealSelection = (meal) => {
-        setSelectedMeal(meal);
-    };
+  const handleMealSelection = (meal) => {
+    setSelectedMeal(meal);
+  };
 
-    const handleDifficultySelection = (difficulty) => {
-        setSelectedDifficulty(difficulty);
-    };
+  const handleDifficultySelection = (difficulty) => {
+    setSelectedDifficulty(difficulty);
+  };
 
-    const buildPrompt = (
-        ingredients,
-        seasonings,
-        selectedMeal, 
-        selectedDifficulty,
-        mealPrepTime,
-        dietaryPreferences,
-        includeExtraIngredients
-    ) => {
-        //TODO fix and add code to prevent injection and sanitize fields first.
-        //Perhaps split up this screen and do it somewhere else
-        const prompt = 
-        `I have these ingredients: ${ingredients}.
-        \nI have these seasonings: ${seasonings}.
-        \nI would prefer to make this for ${selectedMeal}.
-        \nMeal difficulty complexity: ${selectedDifficulty}.
-        \nOther dietary preferences: ${dietaryPreferences}.
-        \nFor meal prep time, please only include meals around or under ${mealPrepTime} minutes.
-        \nOther dietary preferences: ${dietaryPreferences}.
-        \nIt is ${includeExtraIngredients} that I am open to using other ingredients than what is listed.`;
+  const buildPrompt = (
+    ingredients,
+    seasonings,
+    selectedMeal,
+    selectedDifficulty,
+    mealPrepTime,
+    dietaryPreferences,
+    includeExtraIngredients
+  ) => {
+    //TODO fix and add code to prevent injection and sanitize fields first.
+    //Perhaps split up this screen and do it somewhere else
+    const prompt = `Type of Meal: ${selectedMeal},
+        \nInclude Ingredients: ${ingredients},
+        \nInclude condiments/seasonings: ${seasonings},
+        \nMeal Time: ${mealPrepTime},
+        \nDifficulty: ${selectedDifficulty},
+        \nInclude ingredients not listed${includeExtraIngredients}
+        \n\nI want the response to be in JSON format. With title, sub caption, meal time, difficulty, list of steps.
+        \nOnly output the json and no extra text please.
+        \n\nPlease make the meal be esquite and always ineresting for them to try`;
 
-        return prompt;
-    };
+    return prompt;
+  };
 
-    const handleGenerateRecipes = () => {
-        const prompt = buildPrompt(
-            ingredients,
-            mealPrepTime,
-            dietaryPreferences,
-            includeExtraIngredients
-        );
-
-        // TODO - move the update carrots call to after the response comes back in the loading page.
-        // Also do we need both of these calls here?
-        updateCarrots(carrotCount - 1);
-        route.params.updateCarrots(carrotCount - 1);
-        navigation.removeListener;
-        navigation.navigate("Loading", { userPrompt: prompt });
-    };
-
-    return (
-        <TouchableWithoutFeedback onPress={handleScreenPress}>
-            <RecipeView>
-                <RecipeText>What type of meal?</RecipeText>
-                <MealButtonsView>
-                    <CustomButton
-                        onPress={() => handleMealSelection("Breakfast")}
-                        isSelected={selectedMeal === "Breakfast"}
-                    >
-                        <ButtonText>Breakfast</ButtonText>
-                    </CustomButton>
-                    <CustomButton
-                        onPress={() => handleMealSelection("Lunch")}
-                        isSelected={selectedMeal === "Lunch"}
-                    >
-                        <ButtonText>Lunch</ButtonText>
-                    </CustomButton>
-                    <CustomButton
-                        onPress={() => handleMealSelection("Dinner")}
-                        isSelected={selectedMeal === "Dinner"}
-                    >
-                        <ButtonText>Dinner</ButtonText>
-                    </CustomButton>
-                    <CustomButton
-                        onPress={() => handleMealSelection("Dessert")}
-                        isSelected={selectedMeal === "Dessert"}
-                    >
-                        <ButtonText>Dessert</ButtonText>
-                    </CustomButton>
-                </MealButtonsView>
-                <RecipeText onPress={() => focusTextInput(ingredientInputRef)}>
-                    What current ingredients do you have?
-                </RecipeText>
-                <CustomTextInput
-                    ref={ingredientInputRef}
-                    placeholder="Enter ingredients here"
-                    multiline
-                    numberOfLines={4}
-                    value={ingredients}
-                    onChangeText={(text) => setIngredients(text)}
-                    onFocus={() => setFocusedField("ingredients")}
-                />
-                <RecipeText onPress={() => focusTextInput(seasoningInputRef)}>
-                    What condiments, seasonings, and sauces do you have on hand?
-                </RecipeText>
-                <CustomTextInput
-                    ref={seasoningInputRef}
-                    placeholder="Enter condiments, seasonings, and sauces here"
-                    multiline
-                    numberOfLines={4}
-                    value={seasonings}
-                    onChangeText={(text) => setSeasonings(text)}
-                    onFocus={() => setFocusedField("seasonings")}
-                />
-                <RecipeText>Preferred Meal Prep Time: {mealPrepTime} minutes</RecipeText>
-                <Slider
-                    style={{ width: "100%", height: 40 }}
-                    minimumValue={15}
-                    maximumValue={60}
-                    step={5}
-                    minimumTrackTintColor="#7bd9f1"
-                    maximumTrackTintColor="#262626"
-                    value={mealPrepTime}
-                    onValueChange={onSliderValueChange}
-                />
-                <RecipeText>Level of difficulty</RecipeText>
-                <MealButtonsView>
-                    <CustomButton
-                        onPress={() => handleDifficultySelection("Easy")}
-                        isSelected={selectedDifficulty === "Easy"}
-                    >
-                        <ButtonText>Easy</ButtonText>
-                    </CustomButton>
-                    <CustomButton
-                        onPress={() => handleDifficultySelection("Medium")}
-                        isSelected={selectedDifficulty === "Medium"}
-                    >
-                        <ButtonText>Medium</ButtonText>
-                    </CustomButton>
-                    <CustomButton
-                        onPress={() => handleDifficultySelection("Hard")}
-                        isSelected={selectedDifficulty === "Hard"}
-                    >
-                        <ButtonText>Hard</ButtonText>
-                    </CustomButton>
-                </MealButtonsView>
-                <ConsentView
-                    style={{ flexDirection: "row", alignItems: "center", marginTop: 16 }}
-                >
-                    <Switch
-                        value={includeExtraIngredients}
-                        onValueChange={(value) => setIncludeExtraIngredients(value)}
-                    />
-                    <ConsentText>
-                        Deliberately include recipes that incorporate one or more ingredients
-                        I have not listed
-                    </ConsentText>
-                </ConsentView>
-                <SubmitTouchable
-                    onPress={() => {
-                        handleGenerateRecipes();
-                    }}
-                >
-                    <SubmitText>Generate Recipes</SubmitText>
-                </SubmitTouchable>
-            </RecipeView>
-        </TouchableWithoutFeedback>
+  const handleGenerateRecipes = () => {
+    const prompt = buildPrompt(
+      ingredients,
+      mealPrepTime,
+      dietaryPreferences,
+      includeExtraIngredients
     );
+
+    // TODO - move the update carrots call to after the response comes back in the loading page.
+    // Also do we need both of these calls here?
+    updateCarrots(carrotCount - 1);
+    route.params.updateCarrots(carrotCount - 1);
+    navigation.removeListener;
+    navigation.navigate("Loading", { userPrompt: prompt });
+  };
+
+  return (
+    <TouchableWithoutFeedback onPress={handleScreenPress}>
+      <RecipeView>
+        <RecipeText>What type of meal?</RecipeText>
+        <MealButtonsView>
+          <CustomButton
+            onPress={() => handleMealSelection("Breakfast")}
+            isSelected={selectedMeal === "Breakfast"}
+          >
+            <ButtonText>Breakfast</ButtonText>
+          </CustomButton>
+          <CustomButton
+            onPress={() => handleMealSelection("Lunch")}
+            isSelected={selectedMeal === "Lunch"}
+          >
+            <ButtonText>Lunch</ButtonText>
+          </CustomButton>
+          <CustomButton
+            onPress={() => handleMealSelection("Dinner")}
+            isSelected={selectedMeal === "Dinner"}
+          >
+            <ButtonText>Dinner</ButtonText>
+          </CustomButton>
+          <CustomButton
+            onPress={() => handleMealSelection("Dessert")}
+            isSelected={selectedMeal === "Dessert"}
+          >
+            <ButtonText>Dessert</ButtonText>
+          </CustomButton>
+        </MealButtonsView>
+        <RecipeText onPress={() => focusTextInput(ingredientInputRef)}>
+          What current ingredients do you have?
+        </RecipeText>
+        <CustomTextInput
+          ref={ingredientInputRef}
+          placeholder="Enter ingredients here"
+          multiline
+          numberOfLines={4}
+          value={ingredients}
+          onChangeText={(text) => setIngredients(text)}
+          onFocus={() => setFocusedField("ingredients")}
+        />
+        <RecipeText onPress={() => focusTextInput(seasoningInputRef)}>
+          What condiments, seasonings, and sauces do you have on hand?
+        </RecipeText>
+        <CustomTextInput
+          ref={seasoningInputRef}
+          placeholder="Enter condiments, seasonings, and sauces here"
+          multiline
+          numberOfLines={4}
+          value={seasonings}
+          onChangeText={(text) => setSeasonings(text)}
+          onFocus={() => setFocusedField("seasonings")}
+        />
+        <RecipeText>
+          Preferred Meal Prep Time: {mealPrepTime} minutes
+        </RecipeText>
+        <Slider
+          style={{ width: "100%", height: 40 }}
+          minimumValue={15}
+          maximumValue={60}
+          step={5}
+          minimumTrackTintColor="#7bd9f1"
+          maximumTrackTintColor="#262626"
+          value={mealPrepTime}
+          onValueChange={onSliderValueChange}
+        />
+        <RecipeText>Level of difficulty</RecipeText>
+        <MealButtonsView>
+          <CustomButton
+            onPress={() => handleDifficultySelection("Easy")}
+            isSelected={selectedDifficulty === "Easy"}
+          >
+            <ButtonText>Easy</ButtonText>
+          </CustomButton>
+          <CustomButton
+            onPress={() => handleDifficultySelection("Medium")}
+            isSelected={selectedDifficulty === "Medium"}
+          >
+            <ButtonText>Medium</ButtonText>
+          </CustomButton>
+          <CustomButton
+            onPress={() => handleDifficultySelection("Hard")}
+            isSelected={selectedDifficulty === "Hard"}
+          >
+            <ButtonText>Hard</ButtonText>
+          </CustomButton>
+        </MealButtonsView>
+        <ConsentView
+          style={{ flexDirection: "row", alignItems: "center", marginTop: 16 }}
+        >
+          <Switch
+            value={includeExtraIngredients}
+            onValueChange={(value) => setIncludeExtraIngredients(value)}
+          />
+          <ConsentText>
+            Deliberately include recipes that incorporate one or more
+            ingredients I have not listed
+          </ConsentText>
+        </ConsentView>
+        <SubmitTouchable
+          onPress={() => {
+            handleGenerateRecipes();
+          }}
+        >
+          <SubmitText>Generate Recipes</SubmitText>
+        </SubmitTouchable>
+      </RecipeView>
+    </TouchableWithoutFeedback>
+  );
 };
 
 export default InputIngredientsScreen;
