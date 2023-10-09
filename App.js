@@ -1,7 +1,8 @@
 import "react-native-gesture-handler";
-import React from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import * as SplashScreen from 'expo-splash-screen';
 
 // Import your screens
 import HomeScreen from "./screens/HomeScreen";
@@ -11,11 +12,11 @@ import LoadingScreen from "./screens/LoadingScreen";
 const Stack = createStackNavigator();
 
 function App() {
-  /*Should we use expo routing instead?
-    I admit I do not know much about it but just chose react navigation for now.
-    We could install expo-router if we want to try that instead - some people say it is easier?
-    https://www.reddit.com/r/reactnative/comments/14apzyj/exporouter_vs_react_navigation/*/
-    //TODO extract styles into one shared style for the different stacks.
+  //TODO extract styles into one shared style for the different stacks.
+  useEffect(() => {
+    // Hide the splash screen when your app is ready
+    SplashScreen.hideAsync();
+  }, []);
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">

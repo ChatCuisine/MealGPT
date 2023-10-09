@@ -5,8 +5,8 @@ import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { OPENAI_API_KEY } from "@env";
 import { createChatCompletion } from "../api/ChatGPTService";
-import { collection, addDoc } from "firebase/firestore"; // Import Firestore functions
-import { db } from "../firebase/firebase-config"; // Import your Firebase configuration
+// import { collection, addDoc } from "firebase/firestore"; // Import Firestore functions
+// import { db } from "../firebase/firebase-config"; // Import your Firebase configuration
 
 const LoadingScreen = ({ route }) => {
   // const navigation = useNavigation();
@@ -35,7 +35,7 @@ const LoadingScreen = ({ route }) => {
         setResponse(chatResponse);
         setIsLoading(false);
 
-        await db.collection("recipes").add(response);
+        // await db.collection("recipes").add(response);
 
         // Fade in the response text
         Animated.timing(fadeAnim, {
@@ -54,7 +54,8 @@ const LoadingScreen = ({ route }) => {
   }, [route.params.userPrompt]);
 
   return (
-    <ScrollContainer>
+    <ScrollContainer
+      contentContainerStyle={{ alignItems: 'center' }}>
       <LoadingImage
         source={require("../assets/chatcuisine_loadingrecipes.png")}
       />
@@ -83,7 +84,7 @@ const LoadingScreen = ({ route }) => {
 export default LoadingScreen;
 
 const ScrollContainer = styled.ScrollView`
-  flexgrow: 1;
+  flex-grow: 1;
   background-color: #121212;
   padding: 16px;
 `;

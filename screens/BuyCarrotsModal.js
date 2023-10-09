@@ -93,7 +93,6 @@ const ModalScroll = styled.ScrollView`
 const ModalImage = styled.Image`
   width: 75%;
   height: 50%;
-  resize: stretch;
   border-radius: 25px;
 `;
 

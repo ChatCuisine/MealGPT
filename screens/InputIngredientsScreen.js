@@ -57,22 +57,23 @@ const InputIngredientsScreen = ({ navigation, route }) => {
   ) => {
     //TODO fix and add code to prevent injection and sanitize fields first.
     //Perhaps split up this screen and do it somewhere else
-    const prompt = `Type of Meal: ${selectedMeal},
-        \nInclude Ingredients: ${ingredients},
-        \nInclude condiments/seasonings: ${seasonings},
-        \nMeal Time: ${mealPrepTime},
-        \nDifficulty: ${selectedDifficulty},
-        \nInclude ingredients not listed${includeExtraIngredients}
-        \n\nI want the response to be in JSON format. With title, sub caption, meal time, difficulty, list of steps.
-        \nOnly output the json and no extra text please.
-        \n\nPlease make the meal be esquite and always ineresting for them to try`;
-
+    const prompt =
+      `I have these ingredients: ${ingredients}.
+    \nI have these seasonings/condiments: ${seasonings}.
+    \nI would prefer to make this for ${selectedMeal}.
+    \nMeal difficulty complexity preference: ${selectedDifficulty}.
+    \nOther dietary preferences: ${dietaryPreferences}.
+    \nFor meal prep time, please only include meals around or under ${mealPrepTime} minutes.
+    \nOpen to using ingredients additional to what was listed?: ${includeExtraIngredients}`;
     return prompt;
   };
 
   const handleGenerateRecipes = () => {
     const prompt = buildPrompt(
       ingredients,
+      seasonings,
+      selectedMeal,
+      selectedDifficulty,
       mealPrepTime,
       dietaryPreferences,
       includeExtraIngredients
