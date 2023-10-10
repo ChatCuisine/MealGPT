@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ActivityIndicator, Animated, Easing, Text } from "react-native";
+import { ActivityIndicator, Animated, Easing, Text, TouchableOpacity } from "react-native";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
@@ -9,12 +9,13 @@ import { createChatCompletion } from "../api/ChatGPTService";
 // import { db } from "../firebase/firebase-config"; // Import your Firebase configuration
 
 const LoadingScreen = ({ route }) => {
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(true);
-  const [response, setResponse] = useState("");
+  const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const apiKey = OPENAI_API_KEY;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -32,26 +33,38 @@ const LoadingScreen = ({ route }) => {
           apiKey,
           axiosInstance
         );
-        setResponse(chatResponse);
+        console.log(chatResponse);
         setIsLoading(false);
+        const parsedResponse = JSON.parse(chatResponse);
+
+        if (parsedResponse === "Please only enter appropriate items") {
+          throw new Error("Invalid input: Please only enter appropriate items");
+        } else {
+          setResponse(parsedResponse);
+        }
 
         // await db.collection("recipes").add(response);
 
         // Fade in the response text
         Animated.timing(fadeAnim, {
           toValue: 1,
-          duration: 500,
+          duration: 800,
           easing: Easing.linear,
           useNativeDriver: true,
         }).start();
       } catch (err) {
-        setError(err.message || "An error occurred");
+        setError(err.message || "An unknown error occurred :( - please try again later.");
         setIsLoading(false);
       }
     };
 
     fetchData();
   }, [route.params.userPrompt]);
+
+  const openRecipeDetails = (recipe) => {
+    // Navigate to a full-screen view with recipe details
+    navigation.navigate("RecipeDetails", { recipe });
+  };
 
   return (
     <ScrollContainer
@@ -73,8 +86,25 @@ const LoadingScreen = ({ route }) => {
         </LoadingView>
       ) : (
         <Animated.View style={{ opacity: fadeAnim }}>
-          <ResponseText>{response}</ResponseText>
+          {response && response.meals ? (
+            response.meals.map((meal, index) => (
+              <RecipeCard key={index} onPress={() => openRecipeDetails(meal)}>
+                <RecipeTitle>{meal.title}</RecipeTitle>
+                <RecipeSubtitle>{meal.sub_caption}</RecipeSubtitle>
+                <RecipeInfo>
+                  <InfoText>Prep Time: {meal.prep_time} mins</InfoText>
+                  <InfoText>Difficulty: {meal.difficulty}</InfoText>
+                </RecipeInfo>
+                <LikeButtonContainer>
+                  <LikeButton>❤️</LikeButton>
+                </LikeButtonContainer>
+              </RecipeCard>
+            ))
+          ) : (
+            <ErrorText>No recipe data available.</ErrorText>
+          )}
         </Animated.View>
+
       )}
       {!isLoading && error && <ErrorText>{error}</ErrorText>}
     </ScrollContainer>
@@ -106,9 +136,43 @@ const LoadingText = styled.Text`
   margin-top: 16px;
 `;
 
-const ResponseText = styled.Text`
+const RecipeCard = styled.TouchableOpacity`
+  background-color: #333333;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 8px 0;
+`;
+
+const RecipeTitle = styled.Text`
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+`;
+
+const RecipeSubtitle = styled.Text`
   color: white;
   font-size: 16px;
+`;
+
+const RecipeInfo = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 12px;
+`;
+
+const InfoText = styled.Text`
+  color: white;
+  font-size: 14px;
+`;
+
+const LikeButtonContainer = styled.View`
+  align-items: flex-end;
+  margin-top: 12px;
+`;
+
+const LikeButton = styled.Text`
+  color: red;
+  font-size: 24px;
 `;
 
 const ErrorText = styled.Text`

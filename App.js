@@ -9,6 +9,7 @@ import HomeScreen from "./screens/HomeScreen";
 import MyRecipesScreen from "./screens/MyRecipesScreen";
 import InputIngredientsScreen from "./screens/InputIngredientsScreen";
 import LoadingScreen from "./screens/LoadingScreen";
+import RecipeDetailsScreen from "./screens/RecipeDetailsScreen";
 const Stack = createStackNavigator();
 
 function App() {
@@ -60,6 +61,11 @@ function App() {
         <Stack.Screen
           name="Loading"
           component={LoadingScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="RecipeDetails"
+          component={RecipeDetailsScreen}
           options={{ headerShown: false }}
         />
         {/* Adding other idea for now...

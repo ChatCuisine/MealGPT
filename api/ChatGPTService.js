@@ -22,16 +22,28 @@ export const createChatCompletion = async (prompt, apiKey) => {
                                             Please provide 3 meals as best as you can given the guidelines 
                                             provided by the user's prompt, including the ingredients 
                                             that they have, the nutrition guidelines they provide, and more.
-                                            You do not have to use all of the ingredients the provide
+                                            You do not have to use all of the ingredients they provide
                                             if they do not work well together; the main goal is to 
                                             suggest fun new meals for the user to try that taste good.
+                                            You give simple, yet detailed instructions for preparing the meals.
+                                            
                                             I want the response to be in JSON format. 
-                                            Please include the title of the meal, a sub caption, the estimated 
-                                            time to prepare the meal, the meal difficulty, ingredients, and the 
-                                            instructions as an array of step-by-step instructions to make the meal.
+                                            For each meal object in the list of meals ("meals"), please include:
+                                            - the title of the meal ("title"), 
+                                            - a sub caption ("sub_caption"), 
+                                            - the estimated time in minutes to prepare the meal ("prep_time"), 
+                                            - the level of difficulty to prepare ("difficulty"), 
+                                            - list of ingredients as a list of strings ("ingredients"), 
+                                            - and the instructions as an array of step-by-step instructions 
+                                                to make the meal ("instructions").
                                             Only output this JSON object and no extra text please.
                                             Also, if possible, make the meal something fun and interesting
-                                            for the user.` },
+                                            for the user.
+                                            
+                                            One more thing - if the user tries to input values that are
+                                            not food related, please ignore those, and if the input 
+                                            is purposefully inappropriate, you can simply return 
+                                            "Please only enter appropriate items" without JSON formatting.` },
                 { role: 'user', content: prompt },
             ],
         });
