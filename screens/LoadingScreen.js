@@ -5,6 +5,7 @@ import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { OPENAI_API_KEY } from "@env";
 import { createChatCompletion } from "../api/ChatGPTService";
+import { useFonts } from "expo-font";
 // import { collection, addDoc } from "firebase/firestore"; // Import Firestore functions
 // import { db } from "../firebase/firebase-config"; // Import your Firebase configuration
 
@@ -48,8 +49,8 @@ const LoadingScreen = ({ route }) => {
         // Fade in the response text
         Animated.timing(fadeAnim, {
           toValue: 1,
-          duration: 800,
-          easing: Easing.linear,
+          duration: 1500,
+          easing: Easing.bounce,//Easing.linear,
           useNativeDriver: true,
         }).start();
       } catch (err) {
@@ -68,10 +69,13 @@ const LoadingScreen = ({ route }) => {
 
   return (
     <ScrollContainer
-      contentContainerStyle={{ alignItems: 'center' }}>
-      <LoadingImage
-        source={require("../assets/chatcuisine_loadingrecipes.png")}
-      />
+      contentContainerStyle={{ alignItems: 'center' }}
+    >
+      {isLoading && ( // Render the LoadingImage only when isLoading is true
+        <LoadingImage
+          source={require("../assets/chatcuisine_loadingrecipes.png")}
+        />
+      )}
       {isLoading ? (
         <LoadingView>
           <ActivityIndicator
@@ -80,8 +84,8 @@ const LoadingScreen = ({ route }) => {
             style={{ marginTop: 16 }}
           />
           <LoadingText>
-            Our rabbits are dreaming up your cuisine... this may take up to 30
-            seconds.
+            Our rabbits are dreaming up your cuisine...{'\n'}
+            this may take up to 30 seconds.
           </LoadingText>
         </LoadingView>
       ) : (
@@ -113,10 +117,12 @@ const LoadingScreen = ({ route }) => {
 
 export default LoadingScreen;
 
+// padding: top, l/r, bottom;
 const ScrollContainer = styled.ScrollView`
   flex-grow: 1;
   background-color: #121212;
-  padding: 16px;
+  padding: 80px 15px 20px;
+  border-top: 30px;
 `;
 
 const LoadingView = styled.View`
@@ -133,7 +139,9 @@ const LoadingImage = styled.Image`
 const LoadingText = styled.Text`
   color: white;
   font-size: 16px;
+  text-align: center;
   margin-top: 16px;
+  font-family: "BalooRegular";
 `;
 
 const RecipeCard = styled.TouchableOpacity`
@@ -141,6 +149,7 @@ const RecipeCard = styled.TouchableOpacity`
   border-radius: 12px;
   padding: 16px;
   margin: 8px 0;
+  font-family: "BalooRegular";
 `;
 
 const RecipeTitle = styled.Text`

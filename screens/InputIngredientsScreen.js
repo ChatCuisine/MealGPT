@@ -16,6 +16,11 @@ const InputIngredientsScreen = ({ navigation, route }) => {
   const ingredientInputRef = useRef(null);
   const seasoningInputRef = useRef(null); // Ref for condiments and seasonings input
 
+  const customSwitchTrackColor = {
+    true: '#3bb9f1', // Color when switch is ON
+    false: '#333',     // Color when switch is OFF
+  };
+
   const updateCarrots = (newAmount) => {
     setCarrotCount(newAmount);
   };
@@ -123,6 +128,7 @@ const InputIngredientsScreen = ({ navigation, route }) => {
         <CustomTextInput
           ref={ingredientInputRef}
           placeholder="Enter ingredients here"
+          placeholderTextColor="#888"
           multiline
           numberOfLines={4}
           value={ingredients}
@@ -135,6 +141,7 @@ const InputIngredientsScreen = ({ navigation, route }) => {
         <CustomTextInput
           ref={seasoningInputRef}
           placeholder="Enter condiments, seasonings, and sauces here"
+          placeholderTextColor="#888"
           multiline
           numberOfLines={4}
           value={seasonings}
@@ -142,7 +149,7 @@ const InputIngredientsScreen = ({ navigation, route }) => {
           onFocus={() => setFocusedField("seasonings")}
         />
         <RecipeText>
-          Preferred Meal Prep Time: {mealPrepTime} minutes
+          Max meal prep time: {mealPrepTime} minutes
         </RecipeText>
         <Slider
           style={{ width: "100%", height: 40 }}
@@ -181,11 +188,12 @@ const InputIngredientsScreen = ({ navigation, route }) => {
           <Switch
             value={includeExtraIngredients}
             onValueChange={(value) => setIncludeExtraIngredients(value)}
+            trackColor={customSwitchTrackColor}
           />
           <ConsentText>
-            Deliberately include recipes that incorporate one or more
-            ingredients I have not listed
+            Include recipes with additional ingredients
           </ConsentText>
+          
         </ConsentView>
         <SubmitTouchable
           onPress={() => {
@@ -255,7 +263,7 @@ const SubmitTouchable = styled.TouchableOpacity`
 const ConsentText = styled.Text`
   color: white;
   font-family: BalooRegular;
-  font-size: 12px;
+  font-size: 15px;
   margin-left: 8px;
 `;
 
@@ -266,9 +274,9 @@ const ConsentView = styled.View`
 `;
 
 const CustomTextInput = styled.TextInput`
-  background-color: white;
+  background-color: #333;
   padding: 10px;
   border-radius: 5px;
   margin-top: 8px;
-  color: black;
+  color: white;
 `;

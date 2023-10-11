@@ -33,7 +33,7 @@ const HomeScreen = () => {
     return (
         <BottomSheetModalProvider>
             <HomeView>
-                <CustomLinearGradient colors={["#A2E1ED", "#E59758", "#381822"]}>
+                <CustomLinearGradient colors={["#A2E1ED", "#EFC4C3", "#457793"]}>
                     <HomeImage source={require("../assets/chatcuisine_home.png")} />
                     <TitleText>Chat Cuisine</TitleText>
                     <DescriptionText>

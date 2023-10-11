@@ -23,7 +23,9 @@ const RecipeDetailsScreen = ({ route }) => {
                 <SectionTitle>Ingredients:</SectionTitle>
                 <IngredientList>
                     {recipe.ingredients.map((ingredient, index) => (
-                        <IngredientItem key={index}>{ingredient}</IngredientItem>
+                        <IngredientItem key={index}>
+                            • {ingredient}
+                        </IngredientItem>
                     ))}
                 </IngredientList>
             </IngredientsContainer>
@@ -32,10 +34,13 @@ const RecipeDetailsScreen = ({ route }) => {
                 <SectionTitle>Instructions:</SectionTitle>
                 <InstructionList>
                     {recipe.instructions.map((instruction, index) => (
-                        <InstructionItem key={index}>{instruction}</InstructionItem>
+                        <InstructionItem key={index}>
+                            {index + 1}. {instruction}
+                        </InstructionItem>
                     ))}
                 </InstructionList>
             </InstructionsContainer>
+            <Spacer/>
         </Container>
     );
 };
@@ -45,7 +50,7 @@ export default RecipeDetailsScreen;
 const Container = styled.ScrollView`
   flex-grow: 1;
   background-color: #121212;
-  padding: 16px;
+  padding: 80px 20px 0px;
 `;
 
 const RecipeCard = styled.View`
@@ -59,6 +64,7 @@ const RecipeTitle = styled.Text`
   color: white;
   font-size: 24px;
   font-weight: bold;
+  font-family: BalooRegular;
 `;
 
 const RecipeSubtitle = styled.Text`
@@ -94,6 +100,7 @@ const SectionTitle = styled.Text`
   font-size: 20px;
   font-weight: bold;
   margin-top: 16px;
+  font-family: BalooRegular;
 `;
 
 const IngredientList = styled.View``;
@@ -112,4 +119,9 @@ const InstructionItem = styled.Text`
   color: white;
   font-size: 16px;
   margin-top: 8px;
+`;
+
+const Spacer = styled.View`
+  height: 150px; 
+  background-color: transparent;
 `;
