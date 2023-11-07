@@ -14,6 +14,7 @@ const LoadingScreen = ({ route }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
+  const [favorites, setFavorites] = useState([]); // State to store favorite recipes
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const apiKey = OPENAI_API_KEY;
 
