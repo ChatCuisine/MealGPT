@@ -14,34 +14,14 @@ const LoadingScreen = ({ route }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
-  const [favorites, setFavorites] = useState([]); // State to store favorite recipes
+  const [savedRecipes, setSavedRecipes] = useState([]);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const apiKey = OPENAI_API_KEY;
 
-  // Define a function to toggle the favorite status
-  const toggleFavorite = async (meal) => {
-    try {
-      // Check if the meal is already in favorites
-      const favorites = await AsyncStorage.getItem('favorites');
-      let favoritesArray = favorites ? JSON.parse(favorites) : [];
-
-      const isFavorite = favoritesArray.some((favorite) => favorite.title === meal.title);
-
-      if (isFavorite) {
-        // Remove from favorites
-        favoritesArray = favoritesArray.filter((favorite) => favorite.title !== meal.title);
-      } else {
-        // Add to favorites
-        favoritesArray.push(meal);
-      }
-
-      // Update the AsyncStorage
-      await AsyncStorage.setItem('favorites', JSON.stringify(favoritesArray));
-    } catch (error) {
-      console.error('Error toggling favorite:', error);
-    }
-  };
-
+  useEffect(() => {
+    AsyncStorage.setItem('savedRecipes', JSON.stringify(savedRecipes));
+  }, [savedRecipes]);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -90,6 +70,26 @@ const LoadingScreen = ({ route }) => {
     navigation.navigate("RecipeDetails", { recipe });
   };
 
+  const toggleRecipeLike = (recipe) => {
+    const index = savedRecipes.findIndex((r) => r.title === recipe.title);
+    let updatedRecipes;
+  
+    if (index === -1) {
+      // Recipe is not saved, add it
+      updatedRecipes = [...savedRecipes, recipe];
+    } else {
+      // Recipe is already saved, remove it
+      updatedRecipes = [...savedRecipes];
+      updatedRecipes.splice(index, 1);
+    }
+  
+    // Update the state with the new savedRecipes
+    setSavedRecipes(updatedRecipes);
+  
+    // Save the updated savedRecipes to local storage using useEffect
+    AsyncStorage.setItem('savedRecipes', JSON.stringify(updatedRecipes));
+  };
+
   return (
     <ScrollContainer
       contentContainerStyle={{ alignItems: 'center' }}
@@ -124,11 +124,9 @@ const LoadingScreen = ({ route }) => {
                 </RecipeInfo>
                 <LikeButtonContainer>
                   <LikeButton
-                    onPress={() => {
-                      toggleFavorite(meal);
-                    }}
+                    onPress={() => toggleRecipeLike(meal)}
                   >
-                    {favorites.includes(meal) ? '💙' : '❤️'}
+                    {savedRecipes.some((r) => r.title === meal.title) ? '♥' : '♡'}
                   </LikeButton>
                 </LikeButtonContainer>
               </RecipeCard>
