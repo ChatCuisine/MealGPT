@@ -5,9 +5,9 @@ import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { OPENAI_API_KEY } from "@env";
 import { createChatCompletion } from "../api/ChatGPTService";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { useFonts } from "expo-font";
-// import { collection, addDoc } from "firebase/firestore"; // Import Firestore functions
-// import { db } from "../firebase/firebase-config"; // Import your Firebase configuration
 
 const LoadingScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -16,6 +16,30 @@ const LoadingScreen = ({ route }) => {
   const [error, setError] = useState(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const apiKey = OPENAI_API_KEY;
+
+  // Define a function to toggle the favorite status
+  const toggleFavorite = async (meal) => {
+    try {
+      // Check if the meal is already in favorites
+      const favorites = await AsyncStorage.getItem('favorites');
+      let favoritesArray = favorites ? JSON.parse(favorites) : [];
+
+      const isFavorite = favoritesArray.some((favorite) => favorite.title === meal.title);
+
+      if (isFavorite) {
+        // Remove from favorites
+        favoritesArray = favoritesArray.filter((favorite) => favorite.title !== meal.title);
+      } else {
+        // Add to favorites
+        favoritesArray.push(meal);
+      }
+
+      // Update the AsyncStorage
+      await AsyncStorage.setItem('favorites', JSON.stringify(favoritesArray));
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,8 +67,6 @@ const LoadingScreen = ({ route }) => {
         } else {
           setResponse(parsedResponse);
         }
-
-        // await db.collection("recipes").add(response);
 
         // Fade in the response text
         Animated.timing(fadeAnim, {
@@ -100,7 +122,13 @@ const LoadingScreen = ({ route }) => {
                   <InfoText>Difficulty: {meal.difficulty}</InfoText>
                 </RecipeInfo>
                 <LikeButtonContainer>
-                  <LikeButton>❤️</LikeButton>
+                  <LikeButton
+                    onPress={() => {
+                      toggleFavorite(meal);
+                    }}
+                  >
+                    ❤️
+                  </LikeButton>
                 </LikeButtonContainer>
               </RecipeCard>
             ))
