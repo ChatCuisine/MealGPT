@@ -20,7 +20,7 @@ export const createChatCompletion = async (prompt, apiKey) => {
                                             You help people create meals from ingredients they give.
                                             You can assume they have water, oil, salt, and butter.
                                             Please provide exactly 3 meals, no more and no less,
-                                            as best as you can given the guidelines 
+                                            as best as you can given the guidelines
                                             provided by the user's prompt, including the ingredients 
                                             that they have, the nutrition guidelines they provide, and more.
                                             You do not have to use all of the ingredients they provide
@@ -29,12 +29,12 @@ export const createChatCompletion = async (prompt, apiKey) => {
                                             You give simple, yet detailed instructions for preparing the meals.
                                             
                                             I want the response to be in JSON format. 
-                                            For each meal object in the list of meals ("meals"), please include:
+                                            For each of the 3 meal objects in the list of meals ("meals"), please include:
                                             - the title of the meal ("title"), 
                                             - a sub caption ("sub_caption"), 
                                             - the estimated time in minutes to prepare the meal ("prep_time"), 
                                             - the level of difficulty to prepare ("difficulty"), 
-                                            - list of ingredients as a list of strings ("ingredients"), 
+                                            - list of ingredients, including amoutn of each ingredient, as a list of strings ("ingredients"), 
                                             - and the instructions as an array of step-by-step instructions 
                                                 to make the meal ("instructions").
                                             Only output this JSON object and no extra text please.

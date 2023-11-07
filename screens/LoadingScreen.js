@@ -127,7 +127,7 @@ const LoadingScreen = ({ route }) => {
                       toggleFavorite(meal);
                     }}
                   >
-                    ❤️
+                    {favorites.includes(meal) ? '💙' : '❤️'}
                   </LikeButton>
                 </LikeButtonContainer>
               </RecipeCard>

@@ -63,7 +63,8 @@ const InputIngredientsScreen = ({ navigation, route }) => {
     //TODO fix and add code to prevent injection and sanitize fields first.
     //Perhaps split up this screen and do it somewhere else
     const prompt =
-      `I have these ingredients: ${ingredients}.
+      `Please provide 3 meals I could make.
+    \nI have these ingredients: ${ingredients}.
     \nI have these seasonings/condiments: ${seasonings}.
     \nI would prefer to make this for ${selectedMeal}.
     \nMeal difficulty complexity preference: ${selectedDifficulty}.
