@@ -19,9 +19,23 @@ const LoadingScreen = ({ route }) => {
   const apiKey = OPENAI_API_KEY;
 
   useEffect(() => {
+    // Load savedRecipes from local storage when the component mounts
+    AsyncStorage.getItem('savedRecipes')
+      .then((data) => {
+        if (data) {
+          setSavedRecipes(JSON.parse(data));
+        }
+      })
+      .catch((error) => {
+        console.error("Error loading savedRecipes from local storage:", error);
+      });
+  }, []);
+
+  // Save the updated savedRecipes to local storage whenever it changes
+  useEffect(() => {
     AsyncStorage.setItem('savedRecipes', JSON.stringify(savedRecipes));
   }, [savedRecipes]);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -84,10 +98,7 @@ const LoadingScreen = ({ route }) => {
     }
   
     // Update the state with the new savedRecipes
-    setSavedRecipes(updatedRecipes);
-  
-    // Save the updated savedRecipes to local storage using useEffect
-    AsyncStorage.setItem('savedRecipes', JSON.stringify(updatedRecipes));
+    setSavedRecipes(updatedRecipes);s
   };
 
   return (

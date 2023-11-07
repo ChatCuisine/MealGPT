@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styled from "styled-components";
+import { useNavigation } from "@react-navigation/native";
 
 const MyRecipesScreen = () => {
+    const navigation = useNavigation();
     const [savedRecipes, setSavedRecipes] = useState([]);
 
     useEffect(() => {
@@ -26,11 +28,16 @@ const MyRecipesScreen = () => {
         AsyncStorage.setItem('savedRecipes', JSON.stringify(updatedRecipes));
     };
 
+    const openRecipeDetails = (recipe) => {
+        // Navigate to a full-screen view with recipe details
+        navigation.navigate("RecipeDetails", { recipe });
+    };
+
     return (
         <ScrollContainer contentContainerStyle={{ alignItems: 'center' }}>
             <SavedRecipesView>
                 {savedRecipes.map((recipe, index) => (
-                    <RecipeCard key={index}>
+                    <RecipeCard key={index} onPress={() => openRecipeDetails(meal)}>
                         <RecipeTitle>{recipe.title}</RecipeTitle>
                         <RecipeSubtitle>{recipe.sub_caption}</RecipeSubtitle>
                         <RecipeInfo>
