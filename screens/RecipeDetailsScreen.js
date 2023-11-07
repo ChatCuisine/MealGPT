@@ -1,48 +1,67 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView } from "react-native";
 import styled from "styled-components";
+import { db } from "../firebase/firebase-config";
 
 const RecipeDetailsScreen = ({ route }) => {
-    const recipe = route.params.recipe;
+  const [recipeData, setRecipeData] = useState([]);
 
-    return (
-        <Container>
-            <RecipeCard>
-                <RecipeTitle>{recipe.title}</RecipeTitle>
-                <RecipeSubtitle>{recipe.sub_caption}</RecipeSubtitle>
-                <RecipeInfo>
-                    <InfoText>Prep Time: {recipe.prep_time} mins</InfoText>
-                    <InfoText>Difficulty: {recipe.difficulty}</InfoText>
-                </RecipeInfo>
-                <LikeButtonContainer>
-                    <LikeButton>❤️</LikeButton>
-                </LikeButtonContainer>
-            </RecipeCard>
+  const recipe = route.params.recipe;
+  setRecipeData(recipe);
+  useEffect(() => {
+    readRecipeData();
+  }, []);
 
-            <IngredientsContainer>
-                <SectionTitle>Ingredients:</SectionTitle>
-                <IngredientList>
-                    {recipe.ingredients.map((ingredient, index) => (
-                        <IngredientItem key={index}>
-                            • {ingredient}
-                        </IngredientItem>
-                    ))}
-                </IngredientList>
-            </IngredientsContainer>
+  function readRecipeData() {
+    // Get a reference to the recipes collection in Firestore
+    const recipesRef = db.collection("recipes");
+    // Add the recipe to the Firestore collection
+    recipesRef
+      .add(recipe)
+      .then((docRef) => {
+        console.log("Recipe added with ID: ", docRef.id);
+      })
+      .catch((error) => {
+        console.error("Error adding recipe: ", error);
+      });
+  }
 
-            <InstructionsContainer>
-                <SectionTitle>Instructions:</SectionTitle>
-                <InstructionList>
-                    {recipe.instructions.map((instruction, index) => (
-                        <InstructionItem key={index}>
-                            {index + 1}. {instruction}
-                        </InstructionItem>
-                    ))}
-                </InstructionList>
-            </InstructionsContainer>
-            <Spacer/>
-        </Container>
-    );
+  return (
+    <Container>
+      <RecipeCard>
+        <RecipeTitle>{recipe.title}</RecipeTitle>
+        <RecipeSubtitle>{recipe.sub_caption}</RecipeSubtitle>
+        <RecipeInfo>
+          <InfoText>Prep Time: {recipe.prep_time} mins</InfoText>
+          <InfoText>Difficulty: {recipe.difficulty}</InfoText>
+        </RecipeInfo>
+        <LikeButtonContainer>
+          <LikeButton>❤️</LikeButton>
+        </LikeButtonContainer>
+      </RecipeCard>
+
+      <IngredientsContainer>
+        <SectionTitle>Ingredients:</SectionTitle>
+        <IngredientList>
+          {recipe.ingredients.map((ingredient, index) => (
+            <IngredientItem key={index}>• {ingredient}</IngredientItem>
+          ))}
+        </IngredientList>
+      </IngredientsContainer>
+
+      <InstructionsContainer>
+        <SectionTitle>Instructions:</SectionTitle>
+        <InstructionList>
+          {recipe.instructions.map((instruction, index) => (
+            <InstructionItem key={index}>
+              {index + 1}. {instruction}
+            </InstructionItem>
+          ))}
+        </InstructionList>
+      </InstructionsContainer>
+      <Spacer />
+    </Container>
+  );
 };
 
 export default RecipeDetailsScreen;
@@ -122,6 +141,6 @@ const InstructionItem = styled.Text`
 `;
 
 const Spacer = styled.View`
-  height: 150px; 
+  height: 150px;
   background-color: transparent;
 `;
