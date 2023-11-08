@@ -98,7 +98,7 @@ const LoadingScreen = ({ route }) => {
     }
   
     // Update the state with the new savedRecipes
-    setSavedRecipes(updatedRecipes);s
+    setSavedRecipes(updatedRecipes);
   };
 
   return (
