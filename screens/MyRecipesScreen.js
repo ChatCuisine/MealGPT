@@ -61,7 +61,7 @@ export default MyRecipesScreen;
 const ScrollContainer = styled.ScrollView`
   flex-grow: 1;
   background-color: #121212;
-  padding: 80px 15px 20px;
+  padding: 30px 15px 20px;
   border-top: 30px;
 `;
 
@@ -76,6 +76,7 @@ const RecipeCard = styled.View`
   margin: 8px 0;
   font-family: "BalooRegular";
   position: relative;
+  width: 345px;
 `;
 
 const RecipeTitle = styled.Text`
