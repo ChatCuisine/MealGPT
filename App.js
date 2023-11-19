@@ -43,9 +43,10 @@ function App() {
           }}
         />
         <Stack.Screen
-          name="Define Your Recipe"
+          name="Input Ingredients"
           component={InputIngredientsScreen}
           options={{
+
             headerStyle: {
               backgroundColor: "#121212", // Set the background color of the header
             },

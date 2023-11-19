@@ -1,61 +1,64 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView } from "react-native";
 import styled from "styled-components";
-import { useIsFocused } from "@react-navigation/native";
+import { navigation, useIsFocused } from "@react-navigation/native";
 
 const RecipeDetailsScreen = ({ route }) => {
-    const recipe = route.params?.recipe;
-    const isSaved = route.params?.isSaved;
-    const [localIsSaved, setLocalIsSaved] = useState(isSaved);
-  
-    const toggleRecipeLike = () => {
-      // Toggle the local state of isSaved
-      setLocalIsSaved(!localIsSaved);
-  
-      // Call the updateSavedRecipes function to update the global state
-      route.params.updateSavedRecipes(recipe, !localIsSaved);
-    };
+  const recipe = route.params?.recipe;
+  const isSaved = route.params?.isSaved;
+  const updateSavedRecipes = route.params?.updateSavedRecipes;
+  const [localIsSaved, setLocalIsSaved] = useState(isSaved);
 
-    return (
-        <Container>
-            <RecipeCard>
-                <RecipeTitle>{recipe.title}</RecipeTitle>
-                <RecipeSubtitle>{recipe.sub_caption}</RecipeSubtitle>
-                <RecipeInfo>
-                    <InfoText>Prep Time: {recipe.prep_time} mins</InfoText>
-                    <InfoText>Difficulty: {recipe.difficulty}</InfoText>
-                </RecipeInfo>
-                <LikeButtonContainer>
-                  <LikeButton onPress={() => toggleRecipeLike(recipe)}>
-                    {localIsSaved ? '♥' : '♡'}
-                  </LikeButton>
-                </LikeButtonContainer>
-            </RecipeCard>
+  const toggleRecipeLike = () => {
+    // Toggle the local state of isSaved
+    setLocalIsSaved(!localIsSaved);
 
-            <IngredientsContainer>
-                <SectionTitle>Ingredients:</SectionTitle>
-                <IngredientList>
-                    {recipe.ingredients.map((ingredient, index) => (
-                        <IngredientItem key={index}>
-                            • {ingredient}
-                        </IngredientItem>
-                    ))}
-                </IngredientList>
-            </IngredientsContainer>
+    // Call the updateSavedRecipes function to update the global state
+    updateSavedRecipes(recipe, !localIsSaved);
+  };
 
-            <InstructionsContainer>
-                <SectionTitle>Instructions:</SectionTitle>
-                <InstructionList>
-                    {recipe.instructions.map((instruction, index) => (
-                        <InstructionItem key={index}>
-                            {index + 1}. {instruction}
-                        </InstructionItem>
-                    ))}
-                </InstructionList>
-            </InstructionsContainer>
-            <Spacer/>
-        </Container>
-    );
+  return (
+    <Container>
+      <RecipeCard>
+        <RecipeTitle>{recipe.title}</RecipeTitle>
+        <RecipeSubtitle>{recipe.sub_caption}</RecipeSubtitle>
+        <RecipeInfo>
+          <InfoText>Prep Time: {recipe.prep_time} mins</InfoText>
+          <InfoText>Difficulty: {recipe.difficulty}</InfoText>
+        </RecipeInfo>
+        {updateSavedRecipes && (
+          <LikeButtonContainer>
+            <LikeButton onPress={() => toggleRecipeLike(recipe)}>
+              {localIsSaved ? '♥' : '♡'}
+            </LikeButton>
+          </LikeButtonContainer>
+        )}
+      </RecipeCard>
+
+      <IngredientsContainer>
+        <SectionTitle>Ingredients:</SectionTitle>
+        <IngredientList>
+          {recipe.ingredients.map((ingredient, index) => (
+            <IngredientItem key={index}>
+              • {ingredient}
+            </IngredientItem>
+          ))}
+        </IngredientList>
+      </IngredientsContainer>
+
+      <InstructionsContainer>
+        <SectionTitle>Instructions:</SectionTitle>
+        <InstructionList>
+          {recipe.instructions.map((instruction, index) => (
+            <InstructionItem key={index}>
+              {instruction}
+            </InstructionItem>
+          ))}
+        </InstructionList>
+      </InstructionsContainer>
+      <Spacer />
+    </Container>
+  );
 };
 
 export default RecipeDetailsScreen;
@@ -83,6 +86,7 @@ const RecipeTitle = styled.Text`
 const RecipeSubtitle = styled.Text`
   color: white;
   font-size: 18px;
+  font-style: italic;
 `;
 
 const RecipeInfo = styled.View`
@@ -106,7 +110,9 @@ const LikeButton = styled.Text`
   font-size: 32px;
 `;
 
-const IngredientsContainer = styled.View``;
+const IngredientsContainer = styled.View`
+  padding-left: 10px;
+`;
 
 const SectionTitle = styled.Text`
   color: white;
@@ -124,7 +130,9 @@ const IngredientItem = styled.Text`
   margin-top: 8px;
 `;
 
-const InstructionsContainer = styled.View``;
+const InstructionsContainer = styled.View`
+  padding-left: 10px;
+`;
 
 const InstructionList = styled.View``;
 

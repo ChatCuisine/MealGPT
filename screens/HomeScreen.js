@@ -34,7 +34,7 @@ const HomeScreen = () => {
         <BottomSheetModalProvider>
             <HomeView>
                 <CustomLinearGradient colors={["#113355", "#A2E1ED", "#113355"]}>
-                    <HomeImage source={require("../assets/chatcuisine_home.png")} />
+                    <HomeImage source={require("../assets/home.png")} />
                     <TitleText>Chat Cuisine</TitleText>
                     <DescriptionText>
                         Get some fresh and unique meal ideas based on ingredients you have.
@@ -43,7 +43,7 @@ const HomeScreen = () => {
                     <ButtonContainer
                         onPress={() => {
                             navigation.removeListener;
-                            navigation.navigate("Define Your Recipe", {
+                            navigation.navigate("Input Ingredients", {
                                 carrotCount: amountOfCarrots,
                                 updateCarrots: updateCarrots,
                             }); // Navigate to the "InputIngredients" screen

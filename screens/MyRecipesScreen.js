@@ -37,7 +37,7 @@ const MyRecipesScreen = () => {
         <ScrollContainer contentContainerStyle={{ alignItems: 'center' }}>
             <SavedRecipesView>
                 {savedRecipes.map((recipe, index) => (
-                    <RecipeCard key={index} onPress={() => openRecipeDetails(meal)}>
+                    <RecipeCard key={index} onPress={() => openRecipeDetails(recipe)}>
                         <RecipeTitle>{recipe.title}</RecipeTitle>
                         <RecipeSubtitle>{recipe.sub_caption}</RecipeSubtitle>
                         <RecipeInfo>
@@ -70,7 +70,7 @@ const SavedRecipesView = styled.View`
   padding-bottom: 60px;
 `;
 
-const RecipeCard = styled.View`
+const RecipeCard = styled.TouchableOpacity`
   background-color: #333333;
   border-radius: 12px;
   padding: 16px;
