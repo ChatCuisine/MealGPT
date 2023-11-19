@@ -12,6 +12,7 @@ import { useFonts } from "expo-font";
 const LoadingScreen = ({ route }) => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(true);
+  const [isSaved, setIsSaved] = useState(false);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [savedRecipes, setSavedRecipes] = useState([]);
@@ -81,13 +82,17 @@ const LoadingScreen = ({ route }) => {
 
   const openRecipeDetails = (recipe) => {
     // Navigate to a full-screen view with recipe details
-    navigation.navigate("RecipeDetails", { recipe });
+    navigation.navigate("RecipeDetails", { 
+      recipe,
+      updateSavedRecipes: toggleRecipeLike, // Pass the toggleRecipeLike function
+      isSaved: savedRecipes.some((r) => r.title === recipe.title),
+    });
   };
 
-  const toggleRecipeLike = (recipe) => {
+  const toggleRecipeLike = (recipe, isSaved) => {
     const index = savedRecipes.findIndex((r) => r.title === recipe.title);
     let updatedRecipes;
-  
+
     if (index === -1) {
       // Recipe is not saved, add it
       updatedRecipes = [...savedRecipes, recipe];
@@ -96,7 +101,7 @@ const LoadingScreen = ({ route }) => {
       updatedRecipes = [...savedRecipes];
       updatedRecipes.splice(index, 1);
     }
-  
+
     // Update the state with the new savedRecipes
     setSavedRecipes(updatedRecipes);
   };
@@ -159,8 +164,8 @@ export default LoadingScreen;
 const ScrollContainer = styled.ScrollView`
   flex-grow: 1;
   background-color: #121212;
-  padding: 80px 15px 20px;
-  border-top: 30px;
+  padding: 30px 15px 20px;
+  border-top: 10px;
 `;
 
 const LoadingView = styled.View`

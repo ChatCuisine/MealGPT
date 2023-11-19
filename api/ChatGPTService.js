@@ -34,8 +34,8 @@ export const createChatCompletion = async (prompt, apiKey) => {
                                             - a sub caption ("sub_caption"), 
                                             - the estimated time in minutes to prepare the meal ("prep_time"), 
                                             - the level of difficulty to prepare ("difficulty"), 
-                                            - list of ingredients, including amoutn of each ingredient, as a list of strings ("ingredients"), 
-                                            - and the instructions as an array of step-by-step instructions 
+                                            - list of ingredients, including specific amount of each ingredient, as a list of strings ("ingredients"), 
+                                            - and a numbered ordered list of the instructions as an array of step-by-step instructions 
                                                 to make the meal ("instructions").
                                             Only output this JSON object and no extra text please.
                                             Also, if possible, make the meal something fun and interesting

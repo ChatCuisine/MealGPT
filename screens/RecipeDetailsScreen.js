@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView } from "react-native";
 import styled from "styled-components";
+import { useIsFocused } from "@react-navigation/native";
 
 const RecipeDetailsScreen = ({ route }) => {
-    const recipe = route.params.recipe;
+    const recipe = route.params?.recipe;
+    const isSaved = route.params?.isSaved;
+    const [localIsSaved, setLocalIsSaved] = useState(isSaved);
+  
+    const toggleRecipeLike = () => {
+      // Toggle the local state of isSaved
+      setLocalIsSaved(!localIsSaved);
+  
+      // Call the updateSavedRecipes function to update the global state
+      route.params.updateSavedRecipes(recipe, !localIsSaved);
+    };
 
     return (
         <Container>
@@ -15,7 +26,9 @@ const RecipeDetailsScreen = ({ route }) => {
                     <InfoText>Difficulty: {recipe.difficulty}</InfoText>
                 </RecipeInfo>
                 <LikeButtonContainer>
-                    <LikeButton>❤️</LikeButton>
+                  <LikeButton onPress={() => toggleRecipeLike(recipe)}>
+                    {localIsSaved ? '♥' : '♡'}
+                  </LikeButton>
                 </LikeButtonContainer>
             </RecipeCard>
 
@@ -50,7 +63,7 @@ export default RecipeDetailsScreen;
 const Container = styled.ScrollView`
   flex-grow: 1;
   background-color: #121212;
-  padding: 80px 20px 0px;
+  padding: 30px 20px 0px;
 `;
 
 const RecipeCard = styled.View`

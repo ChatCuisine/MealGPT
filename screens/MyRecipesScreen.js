@@ -61,12 +61,13 @@ export default MyRecipesScreen;
 const ScrollContainer = styled.ScrollView`
   flex-grow: 1;
   background-color: #121212;
-  padding: 30px 15px 20px;
+  padding: 20px 15px;
   border-top: 30px;
 `;
 
 const SavedRecipesView = styled.View`
   align-items: center;
+  padding-bottom: 60px;
 `;
 
 const RecipeCard = styled.View`

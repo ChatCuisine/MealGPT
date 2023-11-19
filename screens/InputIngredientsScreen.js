@@ -64,13 +64,13 @@ const InputIngredientsScreen = ({ navigation, route }) => {
     //Perhaps split up this screen and do it somewhere else
     const prompt =
       `Please provide 3 meals I could make.
-    \nI have these ingredients: ${ingredients}.
-    \nI have these seasonings/condiments: ${seasonings}.
-    \nI would prefer to make this for ${selectedMeal}.
-    \nMeal difficulty complexity preference: ${selectedDifficulty}.
-    \nOther dietary preferences: ${dietaryPreferences}.
-    \nFor meal prep time, please only include meals around or under ${mealPrepTime} minutes.
-    \nOpen to using ingredients additional to what was listed?: ${includeExtraIngredients}`;
+    I have these ingredients: ${ingredients}.
+    I have these seasonings/condiments: ${seasonings}.
+    I would prefer to make this for ${selectedMeal}.
+    Meal difficulty complexity preference: ${selectedDifficulty}.
+    Other dietary preferences: ${dietaryPreferences}.
+    For meal prep time, please only include meals around or under ${mealPrepTime} minutes.
+    Open to using ingredients additional to what was listed?: ${includeExtraIngredients}`;
     return prompt;
   };
 
@@ -87,10 +87,14 @@ const InputIngredientsScreen = ({ navigation, route }) => {
 
     // TODO - move the update carrots call to after the response comes back in the loading page.
     // Also do we need both of these calls here?
-    updateCarrots(carrotCount - 1);
-    route.params.updateCarrots(carrotCount - 1);
-    navigation.removeListener;
-    navigation.navigate("Loading", { userPrompt: prompt });
+    if(carrotCount >= 1) {
+      updateCarrots(carrotCount - 1);
+      route.params.updateCarrots(carrotCount - 1);
+      navigation.removeListener;
+      navigation.navigate("Loading", { userPrompt: prompt });
+    } else {
+      alert("You need more carrots to create recipes!")
+    }
   };
 
   return (

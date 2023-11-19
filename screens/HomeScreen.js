@@ -33,7 +33,7 @@ const HomeScreen = () => {
     return (
         <BottomSheetModalProvider>
             <HomeView>
-                <CustomLinearGradient colors={["#A2E1ED", "#EFC4C3", "#457793"]}>
+                <CustomLinearGradient colors={["#113355", "#A2E1ED", "#113355"]}>
                     <HomeImage source={require("../assets/chatcuisine_home.png")} />
                     <TitleText>Chat Cuisine</TitleText>
                     <DescriptionText>
@@ -55,7 +55,7 @@ const HomeScreen = () => {
                     <PreviousTouchable
                         onPress={() => {
                             navigation.removeListener;
-                            navigation.navigate("MyRecipes"); // Navigate to the "Recipes" screen
+                            navigation.navigate("Liked Recipes"); // Navigate to the "Recipes" screen
                         }}
                     >
                         <PreviousText>View previous recipes</PreviousText>
