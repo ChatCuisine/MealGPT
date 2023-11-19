@@ -91,7 +91,7 @@ const InputIngredientsScreen = ({ navigation, route }) => {
       updateCarrots(carrotCount - 1);
       route.params.updateCarrots(carrotCount - 1);
       navigation.removeListener;
-      navigation.navigate("Loading", { userPrompt: prompt });
+      navigation.navigate("Recipes", { userPrompt: prompt }); // This is really the loading screen
     } else {
       alert("You need more carrots to create recipes!")
     }
