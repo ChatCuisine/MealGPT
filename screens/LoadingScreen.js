@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ActivityIndicator, Animated, Easing, Text, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Animated, Easing, ImageBackground, Text, TouchableOpacity } from "react-native";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
@@ -8,6 +8,7 @@ import { createChatCompletion } from "../api/ChatGPTService";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useFonts } from "expo-font";
+import { LinearGradient } from "expo-linear-gradient";
 
 const LoadingScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -82,7 +83,7 @@ const LoadingScreen = ({ route }) => {
 
   const openRecipeDetails = (recipe) => {
     // Navigate to a full-screen view with recipe details
-    navigation.navigate("RecipeDetails", { 
+    navigation.navigate("RecipeDetails", {
       recipe,
       updateSavedRecipes: toggleRecipeLike, // Pass the toggleRecipeLike function
       isSaved: savedRecipes.some((r) => r.title === recipe.title),
@@ -107,54 +108,60 @@ const LoadingScreen = ({ route }) => {
   };
 
   return (
-    <ScrollContainer
-      contentContainerStyle={{ alignItems: 'center' }}
+    <LinearGradient
+      colors={['rgba(18, 18, 18, 1)', 'rgba(22, 57, 75, 1)', 'rgba(18, 18, 18, 1)']} // Adjust the opacity as needed
+      style={{ flex: 1 }}
     >
-      {isLoading && ( // Render the LoadingImage only when isLoading is true
-        <LoadingImage
-          source={require("../assets/chatcuisine_loadingrecipes.png")}
-        />
-      )}
-      {isLoading ? (
-        <LoadingView>
-          <ActivityIndicator
-            size="large"
-            color="white"
-            style={{ marginTop: 16 }}
+      <ScrollContainer
+        contentContainerStyle={{ alignItems: 'center' }}
+        style={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}
+      >
+        {isLoading && ( // Render the LoadingImage only when isLoading is true
+          <LoadingImage
+            source={require("../assets/chatcuisine_loadingrecipes.png")}
           />
-          <LoadingText>
-            Our rabbits are dreaming up your cuisine...{'\n'}
-            this may take up to 30 seconds.
-          </LoadingText>
-        </LoadingView>
-      ) : (
-        <Animated.View style={{ opacity: fadeAnim }}>
-          {response && response.meals ? (
-            response.meals.map((meal, index) => (
-              <RecipeCard key={index} onPress={() => openRecipeDetails(meal)}>
-                <RecipeTitle>{meal.title}</RecipeTitle>
-                <RecipeSubtitle>{meal.sub_caption}</RecipeSubtitle>
-                <RecipeInfo>
-                  <InfoText>Prep Time: {meal.prep_time} mins</InfoText>
-                  <InfoText>Difficulty: {meal.difficulty}</InfoText>
-                </RecipeInfo>
-                <LikeButtonContainer>
-                  <LikeButton
-                    onPress={() => toggleRecipeLike(meal)}
-                  >
-                    {savedRecipes.some((r) => r.title === meal.title) ? '♥' : '♡'}
-                  </LikeButton>
-                </LikeButtonContainer>
-              </RecipeCard>
-            ))
-          ) : (
-            <ErrorText>No recipe data available.</ErrorText>
-          )}
-        </Animated.View>
+        )}
+        {isLoading ? (
+          <LoadingView>
+            <ActivityIndicator
+              size="large"
+              color="white"
+              style={{ marginTop: 16 }}
+            />
+            <LoadingText>
+              Our rabbits are dreaming up your cuisine...{'\n'}
+              this may take a little bit.
+            </LoadingText>
+          </LoadingView>
+        ) : (
+          <Animated.View style={{ opacity: fadeAnim }}>
+            {response && response.meals ? (
+              response.meals.map((meal, index) => (
+                <RecipeCard key={index} onPress={() => openRecipeDetails(meal)}>
+                  <RecipeTitle>{meal.title}</RecipeTitle>
+                  <RecipeSubtitle>{meal.sub_caption}</RecipeSubtitle>
+                  <RecipeInfo>
+                    <InfoText>Prep Time: {meal.prep_time} mins</InfoText>
+                    <InfoText>Difficulty: {meal.difficulty}</InfoText>
+                  </RecipeInfo>
+                  <LikeButtonContainer>
+                    <LikeButton
+                      onPress={() => toggleRecipeLike(meal)}
+                    >
+                      {savedRecipes.some((r) => r.title === meal.title) ? '♥' : '♡'}
+                    </LikeButton>
+                  </LikeButtonContainer>
+                </RecipeCard>
+              ))
+            ) : (
+              <ErrorText>No recipe data available.</ErrorText>
+            )}
+          </Animated.View>
 
-      )}
-      {!isLoading && error && <ErrorText>{error}</ErrorText>}
-    </ScrollContainer>
+        )}
+        {!isLoading && error && <ErrorText>{error}</ErrorText>}
+      </ScrollContainer>
+    </LinearGradient>
   );
 };
 
@@ -188,11 +195,12 @@ const LoadingText = styled.Text`
 `;
 
 const RecipeCard = styled.TouchableOpacity`
-  background-color: #333333;
+  background-color: 'rgba(51, 67, 80, .85)';
   border-radius: 12px;
   padding: 16px;
   margin: 8px 0;
   font-family: "BalooRegular";
+  width: 335px;
 `;
 
 const RecipeTitle = styled.Text`

@@ -51,7 +51,7 @@ const RecipeDetailsScreen = ({ route }) => {
         <InstructionList>
           {recipe.instructions.map((instruction, index) => (
             <InstructionItem key={index}>
-              {instruction}
+              {index + 1}. {instruction}
             </InstructionItem>
           ))}
         </InstructionList>

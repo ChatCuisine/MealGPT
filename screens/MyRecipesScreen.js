@@ -77,7 +77,7 @@ const RecipeCard = styled.TouchableOpacity`
   margin: 8px 0;
   font-family: "BalooRegular";
   position: relative;
-  width: 345px;
+  width: 335px;
 `;
 
 const RecipeTitle = styled.Text`
