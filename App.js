@@ -27,7 +27,7 @@ function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="MyRecipes"
+          name="Liked Recipes"
           component={MyRecipesScreen}
           options={{
             headerStyle: {
@@ -43,7 +43,7 @@ function App() {
           }}
         />
         <Stack.Screen
-          name="Define Your Recipe"
+          name="Input Ingredients"
           component={InputIngredientsScreen}
           options={{
             headerStyle: {
@@ -59,14 +59,32 @@ function App() {
           }}
         />
         <Stack.Screen
-          name="Loading"
+          name="Recipes"
           component={LoadingScreen}
-          options={{ headerShown: false }}
+          options={{
+            headerStyle: {
+              backgroundColor: "#121212", // Set the background color of the header
+            },
+            headerTitleStyle: {
+              display: 'none'
+            },
+            headerTintColor: "white", // Set the color of the header text and buttons
+            headerShadowVisible: false, // Set this to false to remove the header shadow
+          }}
         />
         <Stack.Screen
           name="RecipeDetails"
           component={RecipeDetailsScreen}
-          options={{ headerShown: false }}
+          options={{
+            headerStyle: {
+              backgroundColor: "#121212", // Set the background color of the header
+            },
+            headerTitleStyle: {
+              display: 'none'
+            },
+            headerTintColor: "white", // Set the color of the header text and buttons
+            headerShadowVisible: false, // Set this to false to remove the header shadow
+          }}
         />
         {/* Adding other idea for now...
         <Stack.Screen name="GPTRecipeIdeas" component={GPTRecipeIdeasScreen} />   */}

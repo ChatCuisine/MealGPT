@@ -62,7 +62,7 @@ const BuyCarrotsModal = ({ carrotQuantity }) => {
             This app generates recipes using AI. You can purchase carrots to
             generate new recipes. We do not guarantee the quality of the AI
             generated recipes, and are not liable for any damage or losses from
-            using the app.
+            using the app. If you delete the app, you will lose all purchased carrots.
           </ModalDisclaimer>
         </CustomLinearGradient>
       </ModalScroll>

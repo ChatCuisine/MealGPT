@@ -1,34 +1,117 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useEffect, useState } from "react";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import styled from "styled-components";
+import { useNavigation } from "@react-navigation/native";
 
 const MyRecipesScreen = () => {
+    const navigation = useNavigation();
+    const [savedRecipes, setSavedRecipes] = useState([]);
+
+    useEffect(() => {
+        const loadSavedRecipes = async () => {
+            const savedRecipesJSON = await AsyncStorage.getItem('savedRecipes');
+            if (savedRecipesJSON) {
+                setSavedRecipes(JSON.parse(savedRecipesJSON));
+            }
+        };
+
+        loadSavedRecipes();
+    }, []);
+
+    const removeRecipe = (recipe) => {
+        // Remove the recipe from the list of saved recipes
+        const updatedRecipes = savedRecipes.filter((r) => r.title !== recipe.title);
+        setSavedRecipes(updatedRecipes);
+
+        // Save the updated list to local storage
+        AsyncStorage.setItem('savedRecipes', JSON.stringify(updatedRecipes));
+    };
+
+    const openRecipeDetails = (recipe) => {
+        // Navigate to a full-screen view with recipe details
+        navigation.navigate("RecipeDetails", { recipe });
+    };
+
     return (
-        <View style={{ flex: 1, backgroundColor: '#121212', padding: 16 }}>
-            <Text style={{ color: 'white', fontSize: 16 }}>
-                The start of the My Recipes page - here we can show a history of recipes the user has generated. 
-                Do we think local storage or something like a database like Firebase? 
-                Maybe this would be a fun time to experiment with a different kind of database as well? 
-                I am open to it!
-            </Text>
-            <Text style={{ color: 'white', fontSize: 16, marginTop: 10 }}>
-                - I was thinking for this section having a bunch of containers/cards with titles 
-                and short descriptions of the recipes. (assuming that the response from ChatGPT 
-                is set up a certain way that we can get that). 
-                Perhaps we can be fancy and add images as well.
-            </Text>
-            <Text style={{ color: 'white', fontSize: 16, marginTop: 10 }}>
-                - This may get complicated, but for the recipes to show up here, 
-                should we make the user star it or something? 
-                Otherwise, this section would be pretty huge.
-            </Text>
-            <Text style={{ color: 'white', fontSize: 16, marginTop: 10 }}>
-                - It would probably be good to have some sort of search functionality 
-                at the top so that they don't have to scroll forever for old recipes they want. 
-                We could save them by title. Elasticsearch might be a good option for the 
-                database if this is a priority, though I am not sure they have a free tier?
-            </Text>
-        </View>
+        <ScrollContainer contentContainerStyle={{ alignItems: 'center' }}>
+            <SavedRecipesView>
+                {savedRecipes.map((recipe, index) => (
+                    <RecipeCard key={index} onPress={() => openRecipeDetails(recipe)}>
+                        <RecipeTitle>{recipe.title}</RecipeTitle>
+                        <RecipeSubtitle>{recipe.sub_caption}</RecipeSubtitle>
+                        <RecipeInfo>
+                            <InfoText>Prep Time: {recipe.prep_time} mins</InfoText>
+                            <InfoText>Difficulty: {recipe.difficulty}</InfoText>
+                        </RecipeInfo>
+                        <RemoveButton onPress={() => removeRecipe(recipe)}>
+                            <RemoveButtonText>
+                                Remove
+                            </RemoveButtonText>
+                        </RemoveButton>
+                    </RecipeCard>
+                ))}
+            </SavedRecipesView>
+        </ScrollContainer>
     );
 };
 
 export default MyRecipesScreen;
+
+const ScrollContainer = styled.ScrollView`
+  flex-grow: 1;
+  background-color: #121212;
+  padding: 20px 15px;
+  border-top: 30px;
+`;
+
+const SavedRecipesView = styled.View`
+  align-items: center;
+  padding-bottom: 60px;
+`;
+
+const RecipeCard = styled.TouchableOpacity`
+  background-color: #333333;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 8px 0;
+  font-family: "BalooRegular";
+  position: relative;
+  width: 335px;
+`;
+
+const RecipeTitle = styled.Text`
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+`;
+
+const RecipeSubtitle = styled.Text`
+  color: white;
+  font-size: 16px;
+`;
+
+const RecipeInfo = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 12px;
+`;
+
+const InfoText = styled.Text`
+  color: white;
+  font-size: 14px;
+`;
+
+const RemoveButton = styled(TouchableOpacity)`
+  background-color: red;
+  padding: 8px 16px;
+  border-radius: 12px;
+  align-self: flex-end;
+  margin-top: 8px;
+`;
+
+const RemoveButtonText = styled.Text`
+  color: white;
+  font-size: 14px;
+  text-align: center;
+`;
