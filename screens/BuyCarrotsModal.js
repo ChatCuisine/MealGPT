@@ -1,13 +1,59 @@
-import React, {useRef} from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import styled from "styled-components";
-import { PanResponder } from 'react-native';
+import { Alert, PanResponder } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { Purchases } from "react-native-iap";
 
 //TODO add integration with applepay if apple device or googlepay if android?
-//we could just choose one like stripe but applepay is so slick 
+//we could just choose one like stripe but applepay is so slick
 const BuyCarrotsModal = ({ carrotQuantity }) => {
   const navigation = useNavigation();
+  const productIds = [
+    "com.chatcuisine.recipes_pack.sevens",
+    "com.chatcuisine.recipes_pack.thirty",
+  ];
+  const [amountOfCarrots, setAmountOfCarrots] = useState({ carrotQuantity });
+
+  const initializeIAP = async () => {
+    try {
+      await Purchases.setDebugLogsEnabled(true);
+      await Purchases.setup("f99b91245024432fa0a0a21d88b7f8c4");
+
+      const availableProducts = await Purchases.getProducts(productIds);
+      console.log("Available Products:", availableProducts);
+    } catch (error) {
+      console.error("Error initializing IAP:", error);
+    }
+  };
+
+  useEffect(() => {
+    initializeIAP();
+  }, []);
+
+  const handlePurchase = async (productId) => {
+    try {
+      const purchaseResult = await Purchases.purchaseProduct(productId);
+      // Handle successful purchase
+      console.log("Purchase Result:", purchaseResult);
+
+      // TODO: Add logic to update carrot count or perform any other actions
+      if (productId == "com.chatcuisine.recipes_pack.sevens") {
+        updateCarrots(amountOfCarrots + 7);
+      }
+
+      if (productId == "com.chatcuisine.recipes_pack.thirty") {
+        updateCarrots(amountOfCarrots + 30);
+      }
+    } catch (error) {
+      console.error("Error purchasing product:", error);
+      Alert.alert(
+        "Error",
+        `Failed to complete the purchase. Error: ${error.message}`
+      );
+    }
+  };
+
   const updateCarrots = (newAmount) => {
     setAmountOfCarrots(newAmount);
   };
@@ -21,19 +67,19 @@ const BuyCarrotsModal = ({ carrotQuantity }) => {
         if (gestureState.dy > 30) {
           // You can add any additional checks or conditions here if needed
           // Close the modal or perform any desired action
-          console.log('Modal is being dragged down');
+          console.log("Modal is being dragged down");
           navigation.removeListener;
           navigation.navigate("Home"); // Navigate to the "Home" screen
           //, {
-            // TODO figure out this count later
-            //carrotCount: amountOfCarrots,
-            //updateCarrots: updateCarrots,
-          //}); 
+          // TODO figure out this count later
+          //carrotCount: amountOfCarrots,
+          //updateCarrots: updateCarrots,
+          //});
         }
       },
       onPanResponderRelease: () => {
         navigation.removeListener;
-        navigation.navigate("Home"); 
+        navigation.navigate("Home");
         // Reset any state or perform actions when the user releases the touch
       },
     })
@@ -46,23 +92,35 @@ const BuyCarrotsModal = ({ carrotQuantity }) => {
           <ModalImage source={require("../assets/chatcuisine_carrots.png")} />
           <ModalTitle>Buy More Carrots</ModalTitle>
           <ModalDescription>
-            To write exquiste recipes for yourself, our chef needs to be given carrots
+            To write exquiste recipes for yourself, our chef needs to be given
+            carrots
           </ModalDescription>
-          <ModalEquation>1 carrot = 1 inquiry to recieve 3 recipes</ModalEquation>
+          <ModalEquation>
+            1 carrot = 1 inquiry to recieve 3 recipes
+          </ModalEquation>
           <ModalCarrotCount>
             You currently have {carrotQuantity} carrot(s)
           </ModalCarrotCount>
-          <PurchaseFirstButton>
+          <PurchaseFirstButton
+            onPress={() =>
+              handlePurchase("com.chatcuisine.recipes_pack.sevens")
+            }
+          >
             <FirstButtonText>Purchase 7 carrots for $1.99</FirstButtonText>
           </PurchaseFirstButton>
-          <PurchaseSecondButton>
+          <PurchaseSecondButton
+            onPress={() =>
+              handlePurchase("com.chatcuisine.recipes_pack.thirty")
+            }
+          >
             <SecondButtonText>Purchase 30 carrots for $4.99</SecondButtonText>
           </PurchaseSecondButton>
           <ModalDisclaimer>
             This app generates recipes using AI. You can purchase carrots to
             generate new recipes. We do not guarantee the quality of the AI
             generated recipes, and are not liable for any damage or losses from
-            using the app. If you delete the app, you will lose all purchased carrots.
+            using the app. If you delete the app, you will lose all purchased
+            carrots.
           </ModalDisclaimer>
         </CustomLinearGradient>
       </ModalScroll>

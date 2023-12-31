@@ -1,21 +1,21 @@
 {
   "expo": {
-    "name": "MealGPT",
+    "name": "ChatCuisine",
     "slug": "MealGPT",
-    "version": "1.0.0",
+    "version": "1.0.12",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "plugins": ["react-native-iap"],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#182638"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.daltondom.ChatCuisineAI"
     },
     "android": {
       "adaptiveIcon": {
@@ -25,6 +25,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9722d06d-33ad-4883-82ba-92d3c12ea2dc"
+      }
     }
   }
 }

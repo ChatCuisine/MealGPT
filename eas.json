@@ -1,0 +1,12 @@
+{
+  "build": {
+    "production": {
+      "env": {
+        "OPENAI_API_KEY": "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"
+      }
+    }
+  },
+  "cli": {
+    "promptToConfigurePushNotifications": false
+  }
+}

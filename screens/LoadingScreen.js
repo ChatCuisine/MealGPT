@@ -1,11 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ActivityIndicator, Animated, Easing, ImageBackground, Text, TouchableOpacity } from "react-native";
+import {
+  ActivityIndicator,
+  Animated,
+  Easing,
+  ImageBackground,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import styled from "styled-components";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { OPENAI_API_KEY } from "@env";
 import { createChatCompletion } from "../api/ChatGPTService";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
@@ -18,11 +25,10 @@ const LoadingScreen = ({ route }) => {
   const [error, setError] = useState(null);
   const [savedRecipes, setSavedRecipes] = useState([]);
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const apiKey = OPENAI_API_KEY;
 
   useEffect(() => {
     // Load savedRecipes from local storage when the component mounts
-    AsyncStorage.getItem('savedRecipes')
+    AsyncStorage.getItem("savedRecipes")
       .then((data) => {
         if (data) {
           setSavedRecipes(JSON.parse(data));
@@ -35,7 +41,7 @@ const LoadingScreen = ({ route }) => {
 
   // Save the updated savedRecipes to local storage whenever it changes
   useEffect(() => {
-    AsyncStorage.setItem('savedRecipes', JSON.stringify(savedRecipes));
+    AsyncStorage.setItem("savedRecipes", JSON.stringify(savedRecipes));
   }, [savedRecipes]);
 
   useEffect(() => {
@@ -45,14 +51,14 @@ const LoadingScreen = ({ route }) => {
         const axiosInstance = axios.create({
           baseURL: "https://api.openai.com/v1/completions",
           headers: {
-            Authorization: `Bearer ${apiKey}`,
+            Authorization: `Bearer ${OPENAI_API_KEY}`,
             "Content-Type": "application/json",
           },
         });
 
         const chatResponse = await createChatCompletion(
           userPrompt,
-          apiKey,
+          OPENAI_API_KEY,
           axiosInstance
         );
         console.log(chatResponse);
@@ -69,11 +75,14 @@ const LoadingScreen = ({ route }) => {
         Animated.timing(fadeAnim, {
           toValue: 1,
           duration: 1500,
-          easing: Easing.bounce,//Easing.linear,
+          easing: Easing.bounce, //Easing.linear,
           useNativeDriver: true,
         }).start();
       } catch (err) {
-        setError(err.message || "An unknown error occurred :( - please try again later.");
+        setError(
+          err.message ||
+            "An unknown error occurred :( - please try again later."
+        );
         setIsLoading(false);
       }
     };
@@ -109,12 +118,16 @@ const LoadingScreen = ({ route }) => {
 
   return (
     <LinearGradient
-      colors={['rgba(18, 18, 18, 1)', 'rgba(22, 57, 75, 1)', 'rgba(18, 18, 18, 1)']} // Adjust the opacity as needed
+      colors={[
+        "rgba(18, 18, 18, 1)",
+        "rgba(22, 57, 75, 1)",
+        "rgba(18, 18, 18, 1)",
+      ]} // Adjust the opacity as needed
       style={{ flex: 1 }}
     >
       <ScrollContainer
-        contentContainerStyle={{ alignItems: 'center' }}
-        style={{ backgroundColor: 'rgba(0, 0, 0, 0)' }}
+        contentContainerStyle={{ alignItems: "center" }}
+        style={{ backgroundColor: "rgba(0, 0, 0, 0)" }}
       >
         {isLoading && ( // Render the LoadingImage only when isLoading is true
           <LoadingImage
@@ -129,7 +142,7 @@ const LoadingScreen = ({ route }) => {
               style={{ marginTop: 16 }}
             />
             <LoadingText>
-              Our rabbits are dreaming up your cuisine...{'\n'}
+              Our rabbits are dreaming up your cuisine...{"\n"}
               this may take a little bit.
             </LoadingText>
           </LoadingView>
@@ -145,10 +158,10 @@ const LoadingScreen = ({ route }) => {
                     <InfoText>Difficulty: {meal.difficulty}</InfoText>
                   </RecipeInfo>
                   <LikeButtonContainer>
-                    <LikeButton
-                      onPress={() => toggleRecipeLike(meal)}
-                    >
-                      {savedRecipes.some((r) => r.title === meal.title) ? '♥' : '♡'}
+                    <LikeButton onPress={() => toggleRecipeLike(meal)}>
+                      {savedRecipes.some((r) => r.title === meal.title)
+                        ? "♥"
+                        : "♡"}
                     </LikeButton>
                   </LikeButtonContainer>
                 </RecipeCard>
@@ -157,7 +170,6 @@ const LoadingScreen = ({ route }) => {
               <ErrorText>No recipe data available.</ErrorText>
             )}
           </Animated.View>
-
         )}
         {!isLoading && error && <ErrorText>{error}</ErrorText>}
       </ScrollContainer>
@@ -195,7 +207,7 @@ const LoadingText = styled.Text`
 `;
 
 const RecipeCard = styled.TouchableOpacity`
-  background-color: 'rgba(51, 67, 80, .85)';
+  background-color: "rgba(51, 67, 80, .85)";
   border-radius: 12px;
   padding: 16px;
   margin: 8px 0;
