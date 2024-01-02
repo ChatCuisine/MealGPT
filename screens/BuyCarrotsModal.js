@@ -1,56 +1,60 @@
 import React, { useRef, useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import styled from "styled-components";
-import { Alert, PanResponder } from "react-native";
+import { Platform, PanResponder, Text, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { Purchases } from "react-native-iap";
+import Purchases from "react-native-purchases";
 
-//TODO add integration with applepay if apple device or googlepay if android?
-//we could just choose one like stripe but applepay is so slick
 const BuyCarrotsModal = ({ carrotQuantity }) => {
   const navigation = useNavigation();
-  const productIds = [
-    "com.chatcuisine.recipes_pack.sevens",
-    "com.chatcuisine.recipes_pack.thirty",
-  ];
+  const [currentOffering, setCurrentOffering] = useState(null);
   const [amountOfCarrots, setAmountOfCarrots] = useState({ carrotQuantity });
 
-  const initializeIAP = async () => {
-    try {
-      await Purchases.setDebugLogsEnabled(true);
-      await Purchases.setup("f99b91245024432fa0a0a21d88b7f8c4");
+  useEffect(() => {
+    const setup = async () => {
+      Purchases.setLogLevel(Purchases.LOG_LEVEL.VERBOSE);
+      Purchases.configure({ apiKey: "appl_qtZtRIdoHZunWinzRnrdYShWhRH" });
+      const offerings = await Purchases.getOfferings();
+      setCurrentOffering(offerings.current);
+    };
+    setup().catch(console.log);
+  }, []);
 
-      const availableProducts = await Purchases.getProducts(productIds);
-      console.log("Available Products:", availableProducts);
+  const handlePurchase = async (productIdentifier) => {
+    try {
+      const { purchaserInfo } = await Purchases.purchasePackage(
+        productIdentifier
+      );
+      // Handle successful purchase
+      console.log("Purchase successful:", purchaserInfo, purchasedProduct);
+
+      Alert.alert(
+        "Purchase successful",
+        `Purchaser info: ${JSON.stringify(
+          purchaserInfo
+        )}, Product: ${purchasedProduct}`
+      );
     } catch (error) {
-      console.error("Error initializing IAP:", error);
+      // Handle purchase error
+      Alert.alert(`${productIdentifier}`);
+      Alert.alert("Purchase failed", `${error.message}`);
     }
   };
 
-  useEffect(() => {
-    initializeIAP();
-  }, []);
-
-  const handlePurchase = async (productId) => {
+  const purchasePackage = async (packageIdentifier) => {
     try {
-      const purchaseResult = await Purchases.purchaseProduct(productId);
-      // Handle successful purchase
-      console.log("Purchase Result:", purchaseResult);
-
-      // TODO: Add logic to update carrot count or perform any other actions
-      if (productId == "com.chatcuisine.recipes_pack.sevens") {
-        updateCarrots(amountOfCarrots + 7);
+      const { customerInfo, productIdentifier } =
+        await Purchases.purchasePackage(packageIdentifier);
+      if (
+        typeof customerInfo.entitlements.active["my_entitlement_identifier"] !==
+        "undefined"
+      ) {
+        Alert.alert("Purchase Successful", 'Unlock that great "pro" content');
       }
-
-      if (productId == "com.chatcuisine.recipes_pack.thirty") {
-        updateCarrots(amountOfCarrots + 30);
+    } catch (e) {
+      if (!e.userCancelled) {
+        Alert.alert("Purchase Failed", e.message);
       }
-    } catch (error) {
-      console.error("Error purchasing product:", error);
-      Alert.alert(
-        "Error",
-        `Failed to complete the purchase. Error: ${error.message}`
-      );
     }
   };
 
@@ -85,47 +89,65 @@ const BuyCarrotsModal = ({ carrotQuantity }) => {
     })
   ).current;
 
-  return (
-    <CarrotView>
-      <ModalScroll {...panResponder.panHandlers}>
-        <CustomLinearGradient colors={["#224761", "#C0BBAC", "#224761"]}>
-          <ModalImage source={require("../assets/chatcuisine_carrots.png")} />
-          <ModalTitle>Buy More Carrots</ModalTitle>
-          <ModalDescription>
-            To write exquiste recipes for yourself, our chef needs to be given
-            carrots
-          </ModalDescription>
-          <ModalEquation>
-            1 carrot = 1 inquiry to recieve 3 recipes
-          </ModalEquation>
-          <ModalCarrotCount>
-            You currently have {carrotQuantity} carrot(s)
-          </ModalCarrotCount>
-          <PurchaseFirstButton
-            onPress={() =>
-              handlePurchase("com.chatcuisine.recipes_pack.sevens")
-            }
-          >
-            <FirstButtonText>Purchase 7 carrots for $1.99</FirstButtonText>
-          </PurchaseFirstButton>
-          <PurchaseSecondButton
-            onPress={() =>
-              handlePurchase("com.chatcuisine.recipes_pack.thirty")
-            }
-          >
-            <SecondButtonText>Purchase 30 carrots for $4.99</SecondButtonText>
-          </PurchaseSecondButton>
-          <ModalDisclaimer>
-            This app generates recipes using AI. You can purchase carrots to
-            generate new recipes. We do not guarantee the quality of the AI
-            generated recipes, and are not liable for any damage or losses from
-            using the app. If you delete the app, you will lose all purchased
-            carrots.
-          </ModalDisclaimer>
-        </CustomLinearGradient>
-      </ModalScroll>
-    </CarrotView>
-  );
+  if (!currentOffering) {
+    return <Text>Loading...😊</Text>;
+  } else {
+    return (
+      <CarrotView>
+        <ModalScroll {...panResponder.panHandlers}>
+          <CustomLinearGradient colors={["#224761", "#C0BBAC", "#224761"]}>
+            <ModalImage source={require("../assets/chatcuisine_carrots.png")} />
+            <ModalTitle>Buy More Carrots</ModalTitle>
+            <ModalDescription>
+              To write exquiste recipes for yourself, our chef needs to be given
+              carrots
+            </ModalDescription>
+            <ModalEquation>
+              1 carrot = 1 inquiry to recieve 3 recipes
+            </ModalEquation>
+            <ModalCarrotCount>
+              You currently have {carrotQuantity} carrot(s)
+            </ModalCarrotCount>
+            {currentOffering.availablePackages.map((pkg) => {
+              return (
+                <React.Fragment key={pkg.product.identifier}>
+                  {pkg.product.identifier ===
+                    "com.chatcuisine.recipes_pack.sevens" && (
+                    <PurchaseFirstButton
+                      onPress={() =>
+                        purchasePackage("com.chatcuisine.recipes_pack.sevens")
+                      }
+                    >
+                      <FirstButtonText>
+                        Purchase 7 carrots for $1.99
+                      </FirstButtonText>
+                    </PurchaseFirstButton>
+                  )}
+                  {pkg.product.identifier ===
+                    "com.chatcuisine.recipes_pack.thirty" && (
+                    <PurchaseSecondButton
+                      onPress={() => handlePurchase(pkg.product.identifier)}
+                    >
+                      <SecondButtonText>
+                        Purchase 30 carrots for $4.99
+                      </SecondButtonText>
+                    </PurchaseSecondButton>
+                  )}
+                </React.Fragment>
+              );
+            })}
+            <ModalDisclaimer>
+              This app generates recipes using AI. You can purchase carrots to
+              generate new recipes. We do not guarantee the quality of the AI
+              generated recipes, and are not liable for any damage or losses
+              from using the app. If you delete the app, you will lose all
+              purchased carrots.
+            </ModalDisclaimer>
+          </CustomLinearGradient>
+        </ModalScroll>
+      </CarrotView>
+    );
+  }
 };
 
 export default BuyCarrotsModal;

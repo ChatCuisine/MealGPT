@@ -2,11 +2,10 @@
   "expo": {
     "name": "ChatCuisine",
     "slug": "MealGPT",
-    "version": "1.0.12",
+    "version": "1.0.19",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "plugins": ["react-native-iap"],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
