@@ -5,84 +5,80 @@ import { useNavigation } from "@react-navigation/native";
 import BuyCarrotsModal from "./BuyCarrotsModal";
 import { useFonts } from "expo-font";
 import {
-    BottomSheetModal,
-    BottomSheetModalProvider,
-    BottomSheetHandle,
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetHandle,
 } from "@gorhom/bottom-sheet";
 import styled from "styled-components";
+import { useCarrot } from "../provider/CarrotContext";
 
 const HomeScreen = () => {
-    const navigation = useNavigation();
-    const bottomSheetModalRef = useRef(null);
-    const snapPoints = ["90%"];
-    const [amountOfCarrots, setAmountOfCarrots] = useState(8);
-    const updateCarrots = (newAmount) => {
-        setAmountOfCarrots(newAmount);
-    };
-    function handlePresentModal() {
-        bottomSheetModalRef.current?.present();
-    }
+  const navigation = useNavigation();
+  const bottomSheetModalRef = useRef(null);
+  const snapPoints = ["90%"];
 
-    const [fontsLoaded] = useFonts({
-        BalooRegular: require("../fonts/Baloo-Regular.ttf"),
-    });
-    if (!fontsLoaded) {
-        return null;
-    }
+  const { carrotCount, updateCarrotCount } = useCarrot();
+  function handlePresentModal() {
+    bottomSheetModalRef.current?.present();
+  }
 
-    return (
-        <BottomSheetModalProvider>
-            <HomeView>
-                <CustomLinearGradient colors={["#113355", "#A2E1ED", "#113355"]}>
-                    <HomeImage source={require("../assets/home.png")} />
-                    <TitleText>Chat Cuisine</TitleText>
-                    <DescriptionText>
-                        Get some fresh and unique meal ideas based on ingredients you have.
-                        Spice up your meal life!
-                    </DescriptionText>
-                    <ButtonContainer
-                        onPress={() => {
-                            navigation.removeListener;
-                            navigation.navigate("Input Ingredients", {
-                                carrotCount: amountOfCarrots,
-                                updateCarrots: updateCarrots,
-                            }); // Navigate to the "InputIngredients" screen
-                        }}
-                    >
-                        <ButtonTitle>Let's cook 🍴</ButtonTitle>
-                    </ButtonContainer>
+  const [fontsLoaded] = useFonts({
+    BalooRegular: require("../fonts/Baloo-Regular.ttf"),
+  });
+  if (!fontsLoaded) {
+    return null;
+  }
 
-                    <PreviousTouchable
-                        onPress={() => {
-                            navigation.removeListener;
-                            navigation.navigate("Liked Recipes"); // Navigate to the "Recipes" screen
-                        }}
-                    >
-                        <PreviousText>View previous recipes</PreviousText>
-                        <ChevronRightIcon />
-                    </PreviousTouchable>
-                    <CarrortsTouchable onPress={handlePresentModal}>
-                        <CarrotText>{amountOfCarrots} 🥕</CarrotText>
-                    </CarrortsTouchable>
-                </CustomLinearGradient>
-                <BottomSheetModal
-                    ref={bottomSheetModalRef}
-                    index={0}
-                    snapPoints={snapPoints}
-                    handleComponent={() => <BottomSheetHandle style={handleStyle} />}
-                >
-                    <BuyCarrotsModal carrotQuantity={amountOfCarrots} />
-                </BottomSheetModal>
-            </HomeView>
-        </BottomSheetModalProvider>
-    );
+  return (
+    <BottomSheetModalProvider>
+      <HomeView>
+        <CustomLinearGradient colors={["#113355", "#A2E1ED", "#113355"]}>
+          <HomeImage source={require("../assets/home.png")} />
+          <TitleText>Chat Cuisine</TitleText>
+          <DescriptionText>
+            Get some fresh and unique meal ideas based on ingredients you have.
+            Spice up your meal life!
+          </DescriptionText>
+          <ButtonContainer
+            onPress={() => {
+              navigation.removeListener;
+              navigation.navigate("Input Ingredients"); // Navigate to the "InputIngredients" screen
+            }}
+          >
+            <ButtonTitle>Let's cook 🍴</ButtonTitle>
+          </ButtonContainer>
+
+          <PreviousTouchable
+            onPress={() => {
+              navigation.removeListener;
+              navigation.navigate("Liked Recipes"); // Navigate to the "Recipes" screen
+            }}
+          >
+            <PreviousText>View previous recipes</PreviousText>
+            <ChevronRightIcon />
+          </PreviousTouchable>
+          <CarrortsTouchable onPress={handlePresentModal}>
+            <CarrotText>{carrotCount} 🥕</CarrotText>
+          </CarrortsTouchable>
+        </CustomLinearGradient>
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          index={0}
+          snapPoints={snapPoints}
+          handleComponent={() => <BottomSheetHandle style={handleStyle} />}
+        >
+          <BuyCarrotsModal />
+        </BottomSheetModal>
+      </HomeView>
+    </BottomSheetModalProvider>
+  );
 };
 
 const handleStyle = {
-    backgroundColor: "#224761", // Change the background color
-    width: "100%", // Change the width
-    borderTopLeftRadius: 15, // Adjust the top-left border radius
-    borderTopRightRadius: 15, // Adjust the top-right border radius
+  backgroundColor: "#224761", // Change the background color
+  width: "100%", // Change the width
+  borderTopLeftRadius: 15, // Adjust the top-left border radius
+  borderTopRightRadius: 15, // Adjust the top-right border radius
 };
 
 export default HomeScreen;
@@ -156,10 +152,10 @@ const PreviousText = styled.Text`
 `;
 
 const ChevronRightIcon = styled(Icon).attrs({
-    name: "chevron-right",
-    type: "font-awesome",
-    size: 10,
-    color: "white",
+  name: "chevron-right",
+  type: "font-awesome",
+  size: 10,
+  color: "white",
 })``;
 
 const CarrortsTouchable = styled.TouchableOpacity`

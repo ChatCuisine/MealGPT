@@ -13,12 +13,13 @@ import { useNavigation } from "@react-navigation/native";
 import { OPENAI_API_KEY } from "@env";
 import { createChatCompletion } from "../api/ChatGPTService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { useCarrot } from "../provider/CarrotContext";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 
 const LoadingScreen = ({ route }) => {
   const navigation = useNavigation();
+  const { carrotCount, updateCarrotCount } = useCarrot();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaved, setIsSaved] = useState(false);
   const [response, setResponse] = useState(null);
@@ -64,6 +65,7 @@ const LoadingScreen = ({ route }) => {
         console.log(chatResponse);
         setIsLoading(false);
         const parsedResponse = JSON.parse(chatResponse);
+        updateCarrotCount(carrotCount - 1);
 
         if (parsedResponse === "Please only enter appropriate items") {
           throw new Error("Invalid input: Please only enter appropriate items");

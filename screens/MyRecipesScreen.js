@@ -1,59 +1,61 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import styled from "styled-components";
 import { useNavigation } from "@react-navigation/native";
 
 const MyRecipesScreen = () => {
-    const navigation = useNavigation();
-    const [savedRecipes, setSavedRecipes] = useState([]);
+  const navigation = useNavigation();
+  const [savedRecipes, setSavedRecipes] = useState([]);
 
-    useEffect(() => {
-        const loadSavedRecipes = async () => {
-            const savedRecipesJSON = await AsyncStorage.getItem('savedRecipes');
-            if (savedRecipesJSON) {
-                setSavedRecipes(JSON.parse(savedRecipesJSON));
-            }
-        };
-
-        loadSavedRecipes();
-    }, []);
-
-    const removeRecipe = (recipe) => {
-        // Remove the recipe from the list of saved recipes
-        const updatedRecipes = savedRecipes.filter((r) => r.title !== recipe.title);
-        setSavedRecipes(updatedRecipes);
-
-        // Save the updated list to local storage
-        AsyncStorage.setItem('savedRecipes', JSON.stringify(updatedRecipes));
+  useEffect(() => {
+    const loadSavedRecipes = async () => {
+      const savedRecipesJSON = await AsyncStorage.getItem("savedRecipes");
+      if (savedRecipesJSON) {
+        setSavedRecipes(JSON.parse(savedRecipesJSON));
+      }
     };
 
-    const openRecipeDetails = (recipe) => {
-        // Navigate to a full-screen view with recipe details
-        navigation.navigate("RecipeDetails", { recipe });
-    };
+    loadSavedRecipes();
+  }, []);
 
-    return (
-        <ScrollContainer contentContainerStyle={{ alignItems: 'center' }}>
-            <SavedRecipesView>
-                {savedRecipes.map((recipe, index) => (
-                    <RecipeCard key={index} onPress={() => openRecipeDetails(recipe)}>
-                        <RecipeTitle>{recipe.title}</RecipeTitle>
-                        <RecipeSubtitle>{recipe.sub_caption}</RecipeSubtitle>
-                        <RecipeInfo>
-                            <InfoText>Prep Time: {recipe.prep_time} mins</InfoText>
-                            <InfoText>Difficulty: {recipe.difficulty}</InfoText>
-                        </RecipeInfo>
-                        <RemoveButton onPress={() => removeRecipe(recipe)}>
-                            <RemoveButtonText>
-                                Remove
-                            </RemoveButtonText>
-                        </RemoveButton>
-                    </RecipeCard>
-                ))}
-            </SavedRecipesView>
-        </ScrollContainer>
-    );
+  const removeRecipe = (recipe) => {
+    // Remove the recipe from the list of saved recipes
+    const updatedRecipes = savedRecipes.filter((r) => r.title !== recipe.title);
+    setSavedRecipes(updatedRecipes);
+
+    // Save the updated list to local storage
+    AsyncStorage.setItem("savedRecipes", JSON.stringify(updatedRecipes));
+  };
+
+  const openRecipeDetails = (recipe) => {
+    // Navigate to a full-screen view with recipe details
+    navigation.navigate("RecipeDetails", { recipe });
+  };
+
+  return (
+    <ScrollContainer contentContainerStyle={{ alignItems: "center" }}>
+      {savedRecipes.length > 0 ? (
+        <SavedRecipesView>
+          {savedRecipes.map((recipe, index) => (
+            <RecipeCard key={index} onPress={() => openRecipeDetails(recipe)}>
+              <RecipeTitle>{recipe.title}</RecipeTitle>
+              <RecipeSubtitle>{recipe.sub_caption}</RecipeSubtitle>
+              <RecipeInfo>
+                <InfoText>Prep Time: {recipe.prep_time} mins</InfoText>
+                <InfoText>Difficulty: {recipe.difficulty}</InfoText>
+              </RecipeInfo>
+              <RemoveButton onPress={() => removeRecipe(recipe)}>
+                <RemoveButtonText>Remove</RemoveButtonText>
+              </RemoveButton>
+            </RecipeCard>
+          ))}
+        </SavedRecipesView>
+      ) : (
+        <RecipeSubtitle>No recipes saved yet</RecipeSubtitle>
+      )}
+    </ScrollContainer>
+  );
 };
 
 export default MyRecipesScreen;

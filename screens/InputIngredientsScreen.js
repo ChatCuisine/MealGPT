@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, createContext } from "react";
 import { Switch, Keyboard, TouchableWithoutFeedback } from "react-native";
 import Slider from "@react-native-community/slider";
 import styled from "styled-components";
+import { useCarrot } from "../provider/CarrotContext";
 
 const InputIngredientsScreen = ({ navigation, route }) => {
-  const [carrotCount, setCarrotCount] = useState(route.params.carrotCount);
+  const { carrotCount, updateCarrotCount } = useCarrot();
   const [focusedField, setFocusedField] = useState(null);
   const [ingredients, setIngredients] = useState("");
   const [mealPrepTime, setMealPrepTime] = useState(15);
@@ -17,17 +18,9 @@ const InputIngredientsScreen = ({ navigation, route }) => {
   const seasoningInputRef = useRef(null); // Ref for condiments and seasonings input
 
   const customSwitchTrackColor = {
-    true: '#3bb9f1', // Color when switch is ON
-    false: '#333',     // Color when switch is OFF
+    true: "#3bb9f1", // Color when switch is ON
+    false: "#333", // Color when switch is OFF
   };
-
-  const updateCarrots = (newAmount) => {
-    setCarrotCount(newAmount);
-  };
-
-  useEffect(() => {
-    setCarrotCount(route.params.carrotCount);
-  }, [route.params.carrotCount]);
 
   const focusTextInput = (ref) => {
     if (ref.current) {
@@ -62,8 +55,7 @@ const InputIngredientsScreen = ({ navigation, route }) => {
   ) => {
     //TODO fix and add code to prevent injection and sanitize fields first.
     //Perhaps split up this screen and do it somewhere else
-    const prompt =
-      `Please provide 3 meals I could make.
+    const prompt = `Please provide 3 meals I could make.
     I have these ingredients: ${ingredients}.
     I have these seasonings/condiments: ${seasonings}.
     I would prefer to make this for ${selectedMeal}.
@@ -87,13 +79,11 @@ const InputIngredientsScreen = ({ navigation, route }) => {
 
     // TODO - move the update carrots call to after the response comes back in the loading page.
     // Also do we need both of these calls here?
-    if(carrotCount >= 1) {
-      updateCarrots(carrotCount - 1);
-      route.params.updateCarrots(carrotCount - 1);
+    if (carrotCount >= 1) {
       navigation.removeListener;
       navigation.navigate("Recipes", { userPrompt: prompt }); // This is really the loading screen
     } else {
-      alert("You need more carrots to create recipes!")
+      alert("You need more carrots to create recipes!");
     }
   };
 
@@ -153,9 +143,7 @@ const InputIngredientsScreen = ({ navigation, route }) => {
           onChangeText={(text) => setSeasonings(text)}
           onFocus={() => setFocusedField("seasonings")}
         />
-        <RecipeText>
-          Max meal prep time: {mealPrepTime} minutes
-        </RecipeText>
+        <RecipeText>Max meal prep time: {mealPrepTime} minutes</RecipeText>
         <Slider
           style={{ width: "100%", height: 40 }}
           minimumValue={15}
@@ -195,10 +183,7 @@ const InputIngredientsScreen = ({ navigation, route }) => {
             onValueChange={(value) => setIncludeExtraIngredients(value)}
             trackColor={customSwitchTrackColor}
           />
-          <ConsentText>
-            Include recipes with additional ingredients
-          </ConsentText>
-          
+          <ConsentText>Include recipes with additional ingredients</ConsentText>
         </ConsentView>
         <SubmitTouchable
           onPress={() => {
