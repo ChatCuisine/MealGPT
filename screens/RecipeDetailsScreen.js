@@ -29,7 +29,7 @@ const RecipeDetailsScreen = ({ route }) => {
         {updateSavedRecipes && (
           <LikeButtonContainer>
             <LikeButton onPress={() => toggleRecipeLike(recipe)}>
-              {localIsSaved ? '♥' : '♡'}
+              {localIsSaved ? "♥" : "♡"}
             </LikeButton>
           </LikeButtonContainer>
         )}
@@ -39,9 +39,7 @@ const RecipeDetailsScreen = ({ route }) => {
         <SectionTitle>Ingredients:</SectionTitle>
         <IngredientList>
           {recipe.ingredients.map((ingredient, index) => (
-            <IngredientItem key={index}>
-              • {ingredient}
-            </IngredientItem>
+            <IngredientItem key={index}>• {ingredient}</IngredientItem>
           ))}
         </IngredientList>
       </IngredientsContainer>
@@ -143,6 +141,6 @@ const InstructionItem = styled.Text`
 `;
 
 const Spacer = styled.View`
-  height: 150px; 
+  height: 150px;
   background-color: transparent;
 `;

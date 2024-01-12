@@ -10,14 +10,16 @@ import {
   BottomSheetHandle,
 } from "@gorhom/bottom-sheet";
 import styled from "styled-components";
-import { useCarrot } from "../provider/CarrotContext";
+import { useRevenueCat } from "../provider/RevenueCatProvider";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const bottomSheetModalRef = useRef(null);
   const snapPoints = ["90%"];
 
-  const { carrotCount, updateCarrotCount } = useCarrot();
+  const { user } = useRevenueCat();
+
   function handlePresentModal() {
     bottomSheetModalRef.current?.present();
   }
@@ -58,7 +60,7 @@ const HomeScreen = () => {
             <ChevronRightIcon />
           </PreviousTouchable>
           <CarrortsTouchable onPress={handlePresentModal}>
-            <CarrotText>{carrotCount} 🥕</CarrotText>
+            <CarrotText>{user.carrots} 🥕</CarrotText>
           </CarrortsTouchable>
         </CustomLinearGradient>
         <BottomSheetModal

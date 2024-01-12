@@ -1,20 +1,17 @@
 import React, { useRef, useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import styled from "styled-components";
-import { Platform, PanResponder, Text, Alert } from "react-native";
+import { PanResponder } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useRevenueCat } from "../provider/RevenueCatProvider";
 import { PurchasesPackage } from "react-native-purchases";
-import { useCarrot } from "../provider/CarrotContext";
 
 const BuyCarrotsModal = () => {
   const navigation = useNavigation();
-  const { carrotCount, updateCarrotCount } = useCarrot();
+  const { user, packages, purchasePackage, restorePermissions } =
+    useRevenueCat();
 
-  const { packages, purchasePackage } = useRevenueCat();
-
-  const onPurchase = (pack, moreCarrots) => {
-    // Purchase the package
+  const onPurchase = async (pack) => {
     purchasePackage(pack);
   };
 
@@ -59,14 +56,14 @@ const BuyCarrotsModal = () => {
             1 carrot = 1 inquiry to recieve 3 recipes
           </ModalEquation>
           <ModalCarrotCount>
-            You currently have {carrotCount} carrot(s)
+            You currently have {user.carrots} carrot(s)
           </ModalCarrotCount>
           {packages.map((pack) => {
             return (
               <React.Fragment key={pack.identifier}>
                 {pack.product.identifier ===
                   "com.chatcuisine.recipes_pack.sevens" && (
-                  <PurchaseFirstButton onPress={() => onPurchase(pack, 7)}>
+                  <PurchaseFirstButton onPress={() => onPurchase(pack)}>
                     <FirstButtonText>
                       Purchase 7 carrots for $1.99
                     </FirstButtonText>
@@ -74,7 +71,7 @@ const BuyCarrotsModal = () => {
                 )}
                 {pack.product.identifier ===
                   "com.chatcuisine.recipes_pack.thirty" && (
-                  <PurchaseSecondButton onPress={() => onPurchase(pack, 30)}>
+                  <PurchaseSecondButton onPress={() => onPurchase(pack)}>
                     <SecondButtonText>
                       Purchase 30 carrots for $4.99
                     </SecondButtonText>
@@ -83,6 +80,9 @@ const BuyCarrotsModal = () => {
               </React.Fragment>
             );
           })}
+          <PurchaseRestoreButton onPress={restorePermissions}>
+            <SecondButtonText>Restore</SecondButtonText>
+          </PurchaseRestoreButton>
           <ModalDisclaimer>
             This app generates recipes using AI. You can purchase carrots to
             generate new recipes. We do not guarantee the quality of the AI
@@ -188,6 +188,16 @@ const FirstButtonText = styled.Text`
 
 const PurchaseSecondButton = styled.TouchableOpacity`
   background-color: #7bd9f1;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 30px;
+  padding-right: 30px;
+  border-radius: 100px;
+`;
+
+const PurchaseRestoreButton = styled.TouchableOpacity`
+  background-color: #64b1c4;
+  margin-top: 15px;
   padding-top: 15px;
   padding-bottom: 15px;
   padding-left: 30px;

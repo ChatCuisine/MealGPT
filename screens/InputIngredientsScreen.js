@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef, createContext } from "react";
 import { Switch, Keyboard, TouchableWithoutFeedback } from "react-native";
 import Slider from "@react-native-community/slider";
 import styled from "styled-components";
-import { useCarrot } from "../provider/CarrotContext";
+import { useRevenueCat } from "../provider/RevenueCatProvider";
 
 const InputIngredientsScreen = ({ navigation, route }) => {
-  const { carrotCount, updateCarrotCount } = useCarrot();
   const [focusedField, setFocusedField] = useState(null);
+  const { user } = useRevenueCat();
   const [ingredients, setIngredients] = useState("");
   const [mealPrepTime, setMealPrepTime] = useState(15);
   const [dietaryPreferences, setDietaryPreferences] = useState("");
@@ -79,7 +79,7 @@ const InputIngredientsScreen = ({ navigation, route }) => {
 
     // TODO - move the update carrots call to after the response comes back in the loading page.
     // Also do we need both of these calls here?
-    if (carrotCount >= 1) {
+    if (user.carrots >= 1) {
       navigation.removeListener;
       navigation.navigate("Recipes", { userPrompt: prompt }); // This is really the loading screen
     } else {
